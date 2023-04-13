@@ -3,8 +3,8 @@ print("Hello Today I'm Gonna Teach You")
 import pygame
 import math
 import pygame.time
-from Class/projectile import Projectile
-from Class/player import Player
+from Class.projectile import Projectile
+from Class.player import Player
 pygame.init()
 clock = pygame.time.Clock()
 
