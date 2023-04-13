@@ -1,12 +1,15 @@
 class Player:
     X = 0
     Y = 0
-    def __init__(self, basicSpeed, slowSpeed, size, img):
+    def __init__(self, basicSpeed, slowSpeed, size, img, displayWidth, displayHeight, dashSpeed,cooldownDash,timeDash)
         self.basicSpeed = basicSpeed
         self.slowSpeed = slowSpeed
         self.speed = basicSpeed
         self.size = size
         self.img = pygame.transform.scale(img, (self.size, self.size))
+        self.dashSpeed = dashSpeed
+        self.cooldownDash = cooldownDash
+        self.timeDash = timeDash
 
     def move(self, veloX, veloY):
         if veloX != 0 and veloY != 0:
