@@ -109,17 +109,17 @@ while running:
         timerDash[1] -= 1
 
     #PLAYER Y movement
-    if pressed[pygame.K_z]:
+    if pressed[pygame.K_UP]:
         player.move(0,-1)
-    elif pressed[pygame.K_s]:
+    elif pressed[pygame.K_DOWN]:
         player.move(0,1)
     else :
         playerYVelocity = 0
 
     # PLAYER X movement
-    if pressed[pygame.K_d]:
+    if pressed[pygame.K_RIGHT]:
         player.move(1,0)
-    elif pressed[pygame.K_q]:
+    elif pressed[pygame.K_LEFT]:
         player.move(-1,0)
     else :
         playerXVelocity = 0
@@ -157,11 +157,11 @@ while running:
             enemyList.pop(enemyList.index(enemy))
 
     #Add a bullet to the bullets list on press
-    if pressed[pygame.K_p]:
+    if pressed[pygame.K_w]:
          if pygame.time.get_ticks() - bulletCoolDown >= 250:
             bullets.append(Projectile(player.X, player.Y, classicBulletWidth, classicBullet))
             bulletCoolDown = pygame.time.get_ticks()
-    if pressed[pygame.K_o]:
+    if pressed[pygame.K_x]:
         if pygame.time.get_ticks() - missileCooldown >= 500:
             bullets.append(Projectile(player.X, player.Y, missileWidth, missile))
             missileCooldown = pygame.time.get_ticks()
