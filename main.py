@@ -61,10 +61,10 @@ player = Player(10, 5, 50, pygame.transform.scale(pygame.image.load("img/emeu.jp
 imgEnemy = pygame.image.load("img/enemy.png").convert()
 imgEnemy = pygame.transform.scale(imgEnemy, (50, 50))
 
-enemy1 = Enemy(50, 2, 0, 0, 50, displayWidth, displayHeight, 100, imgEnemy, "right", 0)
-#enemy2 = Enemy(50, 2, 1200, 0, 50, displayWidth, displayHeight, 100, imgEnemy, "left", 0)
-#enemy3 = Enemy(50, 2, 500, 0, 50, displayWidth, displayHeight, 100, imgEnemy, "left", 0)
-enemyList = [enemy1]
+enemy1 = Enemy(50, 2, 300, 0, 50, displayWidth, displayHeight, 100, imgEnemy, 10, 4, math.pi/2)
+enemy2 = Enemy(50, 2, 1200, 0, 50, displayWidth, displayHeight, 100, imgEnemy, 10, 4, math.pi/2)
+enemy3 = Enemy(50, 2, 500, 0, 50, displayWidth, displayHeight, 100, imgEnemy, 10, 4, math.pi/2)
+enemyList = [enemy1, enemy2, enemy3]
 
 #Initiate dash coordinates
 timerDash = [0 , 0]
@@ -162,6 +162,7 @@ while running:
     for enemy in enemyList:
         firstPattern(enemy)
         rect = pygame.Rect(enemy.x, enemy.y, enemy.size, enemy.size)
+        enemy.shoot()
         screen.blit(enemy.image, (enemy.x, enemy.y))
         if enemy.y > enemy.displayHeight:
             enemy.health = 0
