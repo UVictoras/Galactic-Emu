@@ -1,4 +1,3 @@
-import pygame
 from Class.enemy import Enemy
 
 def firstPattern(Enemy):
