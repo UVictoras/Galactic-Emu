@@ -17,3 +17,6 @@ class Enemy():
 
     def takeDmg(self, dmg):
         self.health -= dmg
+
+    def movementPattern(self, func):
+        self.x = func(self.x, self.speed)
