@@ -13,6 +13,7 @@ class Enemy():
         self.image = image
         self.bulletHandler = BulletHandler(firingSpeed, arrayNumber, angleBetweenArrays)
         self.facing = facing
+        self.patternStep = 0
 
     def move(self, velox, veloy):
         self.x = self.x + velox * self.speed
