@@ -1,6 +1,7 @@
+from Class.bulletHandler import BulletHandler
+
 class Enemy():
-    
-    def __init__(self,health, speed, x, y, size, displayWidth, displayHeight, score, image, facing, patternStep):
+    def __init__(self,health, speed, x, y, size, displayWidth, displayHeight, score, image, firingSpeed, arrayNumber, angleBetweenArrays):
         self.health = health
         self.speed = speed
         self.x = x
@@ -10,12 +11,15 @@ class Enemy():
         self.displayHeight = displayHeight
         self.score = score
         self.image = image
-        self.facing = facing
-        self.patternStep = patternStep
+        self.bulletHandler = BulletHandler(firingSpeed, arrayNumber, angleBetweenArrays)
 
-    def move(self, veloX, veloY):
-        self.x = self.x + veloX * self.speed
-        self.y = self.y + veloY * self.speed
+    def move(self, velox, veloy):
+        self.x = self.x + velox * self.speed
+        self.y = self.y + veloy * self.speed
 
     def takeDmg(self, dmg):
         self.health -= dmg
+
+    def shoot(self):
+        print("Shoot")
+        self.bulletHandler.update()
