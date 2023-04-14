@@ -162,7 +162,7 @@ while running:
     for enemy in enemyList:
         firstPattern(enemy)
         rect = pygame.Rect(enemy.x, enemy.y, enemy.size, enemy.size)
-        enemy.shoot()
+        #enemy.shoot()
         screen.blit(enemy.image, (enemy.x, enemy.y))
         if enemy.y > enemy.displayHeight:
             enemy.health = 0
@@ -200,7 +200,7 @@ while running:
     #Shoot your ultimate
     if pressed[pygame.K_i]:
         if pygame.time.get_ticks() - ultimateCooldown >= 1000:
-            bullets.append(Projectile(player.X, player.Y, ultimateShootWidth, ultimateShoot))
+            bullets.append(Projectile(player.X, player.Y, ultimateShootWidth, ultimateShoot, 10, 50, False, displayWidth, displayHeight))
             ultimateCooldown = pygame.time.get_ticks()
 
     #Score grows automatically
