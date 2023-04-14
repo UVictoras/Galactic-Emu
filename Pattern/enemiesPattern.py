@@ -7,37 +7,38 @@ def firstPattern(Enemy):
     
     if Enemy.x <= 0:
         Enemy.facing = "right"
+        Enemy.patternStep = 0
     elif Enemy.x >= 1920 - Enemy.size:
         Enemy.facing = "left"
-        Enemy.patternStep = 1
+        Enemy.patternStep = 0
 
-    if Enemy.x == 0 and Enemy.facing == "right":
+    if Enemy.facing == "right" and Enemy.x == 0:
         Enemy.x += 1
         Enemy.y += 1
-    elif Enemy.patternStep%6 == 0 and Enemy.facing == "right" and Enemy.patternStep < (1920 - Enemy.size)//2:
+    elif Enemy.facing == "right" and Enemy.patternStep%6 == 0 and Enemy.patternStep < (1920 - Enemy.size)//2:
         Enemy.x += 1
-    elif Enemy.facing == "right" and Enemy.patternStep < (1920 - Enemy.size)//2:
+    elif Enemy.facing == "right" and Enemy.patternStep <= (1920 - Enemy.size)//2:
         Enemy.x += 1
         Enemy.y += 1
     
-    if Enemy.patternStep >= (1920 - Enemy.size)//2 and Enemy.facing == "right" and Enemy.patternStep%6 == 0:
+    if Enemy.facing == "right" and Enemy.patternStep > (1920 - Enemy.size)//2 and (Enemy.patternStep-(1920-Enemy.size)//2)%6 == 0:
         Enemy.x += 1
-    elif Enemy.facing == "right" and Enemy.patternStep >= (1920 - Enemy.size)//2:
+    elif Enemy.facing == "right" and Enemy.patternStep > (1920 - Enemy.size)//2:
         Enemy.x += 1
         Enemy.y -= 1
 
-    if Enemy.patternStep == (1920 - Enemy.size) and Enemy.facing == "left":
+    if Enemy.facing == "left" and Enemy.patternStep == (1920 - Enemy.size):
         Enemy.x -= 1
         Enemy.y += 1
-    elif Enemy.patternStep%6 == 0 and Enemy.facing == "left" and Enemy.patternStep < (1920 - Enemy.size)//2:
+    elif Enemy.facing == "left" and Enemy.patternStep%6 == 0 and Enemy.patternStep < (1920 - Enemy.size)//2:
         Enemy.x -= 1
-    elif Enemy.facing == "left" and Enemy.patternStep < (1920 - Enemy.size)//2:
+    elif Enemy.facing == "left" and Enemy.patternStep <= (1920 - Enemy.size)//2:
         Enemy.x -= 1
         Enemy.y += 1
     
-    if Enemy.patternStep >= (1920 - Enemy.size)//2 and Enemy.facing == "left" and Enemy.patternStep%6 == 0:
+    if Enemy.facing == "left" and Enemy.patternStep > (1920 - Enemy.size)//2 and (Enemy.patternStep-(1920-Enemy.size)//2)%6 == 0:
         Enemy.x -= 1
-    elif Enemy.facing == "right" and Enemy.patternStep >= (1920 - Enemy.size)//2:
+    elif Enemy.facing == "left" and Enemy.patternStep > (1920 - Enemy.size)//2:
         Enemy.x -= 1
         Enemy.y -=1
 
