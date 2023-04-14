@@ -306,7 +306,7 @@ while running:
         else:
             bullets.pop(bullets.index(bullet))
 
-    score_text = font.render(f'Score: {score.score}', True, (255, 255, 255))
-    screen.blit(score_text, (10, 10))
+    scoreText = font.render(f'Score: {score.score}', True, (255, 255, 255))
+    screen.blit(scoreText, (10, 10))
     pygame.display.update()
 pygame.quit()
