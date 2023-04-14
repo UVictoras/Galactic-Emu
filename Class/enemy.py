@@ -1,7 +1,7 @@
 from Class.bulletHandler import BulletHandler
 
 class Enemy():
-    def __init__(self,health, speed, x, y, size, displayWidth, displayHeight, score, image, firingSpeed, arrayNumber, angleBetweenArrays):
+    def __init__(self,health, speed, x, y, size, displayWidth, displayHeight, score, image, firingSpeed, arrayNumber, angleBetweenArrays, facing):
         self.health = health
         self.speed = speed
         self.x = x
@@ -12,6 +12,7 @@ class Enemy():
         self.score = score
         self.image = image
         self.bulletHandler = BulletHandler(firingSpeed, arrayNumber, angleBetweenArrays)
+        self.facing = facing
 
     def move(self, velox, veloy):
         self.x = self.x + velox * self.speed
