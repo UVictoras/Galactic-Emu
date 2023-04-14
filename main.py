@@ -215,7 +215,7 @@ while running:
     for bullet in bullets:
         if bullet.y > 0 - bullet.width and bullet.y < displayHeight and bullet.x > 0 - bullet.width and bullet.x < displayWidth:  
             if bullet.isHoming == False:
-                screen.blit(bullet.image, (bullet.x, bullet.y)
+                screen.blit(bullet.image, (bullet.x, bullet.y))
 
     scoreText = font.render(f'Score: {score.score}', True, (255, 255, 255))
     screen.blit(scoreText, (10, 10))
