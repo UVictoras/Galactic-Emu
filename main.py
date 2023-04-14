@@ -37,15 +37,21 @@ missile = pygame.image.load("img/missile.png")
 missile = pygame.transform.scale(missile, (50, 50))
 missileWidth = missile.get_width()
 
-#Import boulles 
+#Import bullets 
 classicBullet =  pygame.image.load("img/bullet.png")
 classicBullet = pygame.transform.scale(classicBullet, (50, 50))
 classicBulletWidth = classicBullet.get_width()
+
+#Import ultimate
+ultimateShoot = pygame.image.load("img/grosse_boule.png")
+ultimateShoot = pygame.transform.scale(ulti, (100, 100))
+ultimateShootWidth = ultimateShoot.get_width()
 
 #Bullets & CD
 bullets = []
 missileCooldown = 0
 bulletCoolDown = 0
+ultimateCooldown = 0
 scoreTime = 0
 
 #Create Player
@@ -166,6 +172,12 @@ while running:
         if pygame.time.get_ticks() - missileCooldown >= 500:
             bullets.append(Projectile(player.X, player.Y, missileWidth, missile))
             missileCooldown = pygame.time.get_ticks()
+            
+    #Shoot your ultimate
+    if pressed[pygame.K_i]:
+        if pygame.time.get_ticks() - ultimateCooldown >= 1000:
+            bullets.append(Projectile(player.X, player.Y, ultimateShootWidth, ultimateShoot))
+            ultimateCooldown = pygame.time.get_ticks()
 
     #Score grows automatically
     if pygame.time.get_ticks() - scoreTime >= 3000:
