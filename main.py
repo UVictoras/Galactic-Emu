@@ -44,7 +44,7 @@ classicBulletWidth = classicBullet.get_width()
 
 #Import ultimate
 ultimateShoot = pygame.image.load("img/grosse_boule.png")
-ultimateShoot = pygame.transform.scale(ulti, (100, 100))
+ultimateShoot = pygame.transform.scale(ultimateShoot, (100, 100))
 ultimateShootWidth = ultimateShoot.get_width()
 
 #Bullets & CD
