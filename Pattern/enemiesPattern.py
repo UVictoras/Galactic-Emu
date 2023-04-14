@@ -1,9 +1,10 @@
 import pygame
+from Class.enemy import Enemy
 
-def firstPattern(ownX, speed):
+def firstPattern(Enemy):
     
-    while ownX > 0:
-        ownX -= speed
-    while ownX < 1920:
-        ownX += speed
-    return ownX
+    while Enemy.x > 0:
+        Enemy.x -= Enemy.speed
+    while Enemy.x < 1920:
+        Enemy.x += Enemy.speed
+    return Enemy.x

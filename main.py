@@ -131,7 +131,7 @@ while running:
     
     #Enemy
     for enemy in enemyList:
-        enemy.movementPattern(firstPattern)
+        firstPattern(enemy)
         rect = pygame.Rect(enemy.x, enemy.y, enemy.size, enemy.size)
         screen.blit(enemy.image, (enemy.x, enemy.y))
         if enemy.y > enemy.displayHeight:
