@@ -47,24 +47,29 @@ ultimateShoot = pygame.image.load("img/grosse_boule.png")
 ultimateShoot = pygame.transform.scale(ultimateShoot, (100, 100))
 ultimateShootWidth = ultimateShoot.get_width()
 
-#Bullets & CD
-bullets = []
+#projectileList & CD
+projectileList = []
 missileCooldown = 0
 bulletCoolDown = 0
 ultimateCooldown = 0
 scoreTime = 0
 
 #Create Player
-player = Player(10, 5, 50, pygame.transform.scale(pygame.image.load("img/emeu.jpg").convert(), (50, 50)), displayWidth, displayHeight, 30, 60, 15, 100)
+imgPlayer = pygame.image.load("img/player.png")
+imgPlayer = pygame.transform.scale(imgPlayer, (50, 50))
+
+player = Player(10, 5, 50, displayWidth, displayHeight, 30, 60, 15, 5, projectileList)
+
 
 #Create Enemy
 imgEnemy = pygame.image.load("img/enemy.png").convert()
 imgEnemy = pygame.transform.scale(imgEnemy, (50, 50))
 
-enemy1 = Enemy(50, 2, 300, 0, 50, displayWidth, displayHeight, 100, imgEnemy, 10, 4, math.pi/2, "left")
-enemy2 = Enemy(50, 2, 1200, 0, 50, displayWidth, displayHeight, 100, imgEnemy, 10, 4, math.pi/2, "left")
-enemy3 = Enemy(50, 2, 500, 0, 50, displayWidth, displayHeight, 100, imgEnemy, 10, 4, math.pi/2, "left")
+enemy1 = Enemy(50, 2, 300, 0, 50, displayWidth, displayHeight, 100, imgEnemy, 10, 4, math.pi/2, projectileList, 1, "left")
+enemy2 = Enemy(50, 2, 1200, 0, 50, displayWidth, displayHeight, 100, imgEnemy, 10, 4, math.pi/2, projectileList, 1, "left")
+enemy3 = Enemy(50, 2, 500, 0, 50, displayWidth, displayHeight, 100, imgEnemy, 10, 4, math.pi/2, projectileList, 1, "left")
 enemyList = [enemy1, enemy2, enemy3]
+
 
 #Initiate dash coordinates
 timerDash = [0 , 0]
@@ -98,7 +103,6 @@ while running:
         scroll = 0
 
     # Slow movement and dash
-
     pressed = pygame.key.get_pressed()
 
     if pressed[pygame.K_LSHIFT]:
@@ -109,99 +113,91 @@ while running:
         player.speed = player.dashSpeed
     elif timerDash[0] == 0: 
         player.speed = player.basicSpeed
-    
+
     if timerDash[0] > 0:
         timerDash[0] -= 1
     elif timerDash[0] == 0 and timerDash[1] > 0:
         timerDash[1] -= 1
 
-    #PLAYER Y movement
+     #PLAYER Y movement
     if pressed[pygame.K_UP]:
-        player.move(0,-1)
+        velY = -1
     elif pressed[pygame.K_DOWN]:
-        player.move(0,1)
+        velY = 1
     else :
-        playerYVelocity = 0
+        velY = 0
 
     # PLAYER X movement
     if pressed[pygame.K_RIGHT]:
-        player.move(1,0)
+        velX = 1
     elif pressed[pygame.K_LEFT]:
-        player.move(-1,0)
+        velX = -1
     else :
-        playerXVelocity = 0
+        velX = 0
+        
+    player.move(velX, velY)
+    playerRect = pygame.Rect(player.X, player.Y, player.size/2, player.size/2)
 
-    # Change each bullet location depending on velocity
-    for bullet in bullets:
-        if bullet.isHoming == True:
-            if len(enemyList) == 0:
-                bullet.move(0, -1)
-                screen.blit(bullet.image, (bullet.x, bullet.y))
-            else:
-                dx = enemyList[0].x - bullet.x
-                dy = enemyList[0].y - bullet.y
+    for bullet in projectileList:
+        if bullet.update(enemyList) == True:
+            projectileList.pop(projectileList.index(bullet))
+        screen.blit(bullet.image, (bullet.x, bullet.y))
+        #Collision bullet & enemy
+        for bullet in projectileList:
+            if bullet.isPlayer == False:
+                bulletRect = pygame.Rect(bullet.x, bullet.y, bullet.width, bullet.width)
+                if playerRect.colliderect(bulletRect):
+                    player.getHit()
+                    projectileList.pop(projectileList.index(bullet))
 
-                distance = math.sqrt((dx ** 2) + (dy ** 2))
-
-                # Déplacer le missile vers la cible avec une vitesse constante
-                bullet.move((dx / distance), (dy / distance))
-
-                # Calculer l'angle de rotation nécessaire pour pointer vers l'ennemi
-                angle_radians = math.atan2(dy, dx)
-                angle_degrees = math.degrees(angle_radians)
-
-                # Faire pivoter l'image du missile de l'angle calculé
-                rotated_image = pygame.transform.rotate(bullet.image, -angle_degrees - 90)
-
-                # Afficher l'image tournée
-                screen.blit(rotated_image, (bullet.x, bullet.y))
-        else:
-            bullet.move(0, -1)
-    
     #Enemy
     for enemy in enemyList:
         firstPattern(enemy)
+        enemy.update()
         rect = pygame.Rect(enemy.x, enemy.y, enemy.size, enemy.size)
-        #enemy.shoot()
+        
         screen.blit(enemy.image, (enemy.x, enemy.y))
         if enemy.y > enemy.displayHeight:
             enemy.health = 0
             enemyList.pop(enemyList.index(enemy))
 
         #Collision bullet & enemy
-        for bullet in bullets:
-            bulletRect = pygame.Rect(bullet.x, bullet.y, bullet.width, bullet.width)
-            if rect.colliderect(bulletRect):
-                enemy.takeDmg(bullet.damage)
-                score.score_increment(bullet.damage)
-                bullets.pop(bullets.index(bullet))
+        for bullet in projectileList:
+            if bullet.isPlayer == True:
+                bulletRect = pygame.Rect(bullet.x, bullet.y, bullet.width, bullet.width)
+                if rect.colliderect(bulletRect):
+                    enemy.takeDmg(bullet.damage)
+                    score.score_increment(10)
+                    projectileList.pop(projectileList.index(bullet))
 
-            if(enemy.health <= 0):
-                score.score_increment(enemy.score)
-                enemyList.pop(enemyList.index(enemy))
-                break
-        
-        playerRect = pygame.Rect(player.X, player.Y, 100, 100)
+                if(enemy.health <= 0):
+                    score.score_increment(enemy.score)
+                    enemyList.pop(enemyList.index(enemy))
+                    break
         if rect.colliderect(playerRect):
             player.takeDmg(10)
             score.score_increment(10)
             enemyList.pop(enemyList.index(enemy))
 
-    #Add a bullet to the bullets list on press
+
+    #Add a bullet to the projectileList list on press
     if pressed[pygame.K_w]:
-         if pygame.time.get_ticks() - bulletCoolDown >= 250:
-            bullets.append(Projectile(player.X, player.Y, classicBulletWidth, classicBullet, 10, 5, False, displayWidth, displayHeight))
-            bulletCoolDown = pygame.time.get_ticks()
+        if player.cooldown <= 0:
+            player.shoot()
+            player.cooldown = player.timeBetweenShots
     if pressed[pygame.K_x]:
-        if pygame.time.get_ticks() - missileCooldown >= 500:
-            bullets.append(Projectile(player.X, player.Y, missileWidth, missile, 10, 10, True, displayWidth, displayHeight))
-            missileCooldown = pygame.time.get_ticks()
-            
+        if player.missileCooldown <= 0:
+            player.shootHoming()
+            player.missileCooldown = player.timeBetweenMissiles
+    
+    player.cooldown -= 1
+    player.missileCooldown -= 1
+
     #Shoot your ultimate
     if pressed[pygame.K_i]:
-        if pygame.time.get_ticks() - ultimateCooldown >= 1000:
-            bullets.append(Projectile(player.X, player.Y, ultimateShootWidth, ultimateShoot, 10, 50, False, displayWidth, displayHeight))
-            ultimateCooldown = pygame.time.get_ticks()
+        if pygame.time.get_ticks() - ultimateCooldown >= 20000:
+            player.shoot()
+            player.ultimateCooldown = player.timeBetweenUltimates
 
     #Score grows automatically
     if pygame.time.get_ticks() - scoreTime >= 3000:
@@ -209,16 +205,13 @@ while running:
         scoreTime = pygame.time.get_ticks()
         
     #Draw player model on screen
-    screen.blit(player.img, (player.X, player.Y))
+    screen.blit(imgPlayer, (player.X, player.Y))
     
-    #Draw each missile model on screen
-    for bullet in bullets:
-        if bullet.y > 0 - bullet.width and bullet.y < displayHeight and bullet.x > 0 - bullet.width and bullet.x < displayWidth:  
-            if bullet.isHoming == False:
-                screen.blit(bullet.image, (bullet.x, bullet.y))
-
+    #Write player's score & remaining lives
     scoreText = font.render(f'Score: {score.score}', True, (255, 255, 255))
     screen.blit(scoreText, (10, 10))
+    livesText = font.render(f'Lives: {player.lives}', True, (255, 255, 255))
+    screen.blit(livesText, (10, 30))
     pygame.display.update()
 
 pygame.quit()
