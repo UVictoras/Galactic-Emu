@@ -182,13 +182,23 @@ while running:
 
     #Add a bullet to the projectileList list on press
     if pressed[pygame.K_w]:
+<<<<<<< HEAD
         if player.cooldown <= 0:
             player.shoot()
             player.cooldown = player.timeBetweenShots
+=======
+        if pressed[pygame.K_z]:
+        if player.cooldown <= 0:
+            player.shoot()
+            player.cooldown = player.timeBetweenShots
+        else:
+            player.cooldown -= 1
+>>>>>>> b1e51fd8cf0ef78ceee913807d0509652e959c2e
     if pressed[pygame.K_x]:
         if player.missileCooldown <= 0:
             player.shootHoming()
             player.missileCooldown = player.timeBetweenMissiles
+<<<<<<< HEAD
     
     player.cooldown -= 1
     player.missileCooldown -= 1
@@ -198,6 +208,16 @@ while running:
         if pygame.time.get_ticks() - ultimateCooldown >= 20000:
             player.shoot()
             player.ultimateCooldown = player.timeBetweenUltimates
+=======
+        else:
+            player.missileCooldown -= 1
+            
+    #Shoot your ultimate
+    if pressed[pygame.K_i]:
+        if pygame.time.get_ticks() - ultimateCooldown >= 20000:
+            bullets.append(Projectile(player.X, player.Y, ultimateShootWidth, ultimateShoot, 10, 50, False, displayWidth, displayHeight))
+            ultimateCooldown = pygame.time.get_ticks()
+>>>>>>> b1e51fd8cf0ef78ceee913807d0509652e959c2e
 
     #Score grows automatically
     if pygame.time.get_ticks() - scoreTime >= 3000:
