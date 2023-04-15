@@ -199,7 +199,7 @@ while running:
             
     #Shoot your ultimate
     if pressed[pygame.K_i]:
-        if pygame.time.get_ticks() - ultimateCooldown >= 1000:
+        if pygame.time.get_ticks() - ultimateCooldown >= 20000:
             bullets.append(Projectile(player.X, player.Y, ultimateShootWidth, ultimateShoot, 10, 50, False, displayWidth, displayHeight))
             ultimateCooldown = pygame.time.get_ticks()
 
