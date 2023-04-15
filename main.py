@@ -189,13 +189,18 @@ while running:
 
     #Add a bullet to the bullets list on press
     if pressed[pygame.K_w]:
-         if pygame.time.get_ticks() - bulletCoolDown >= 250:
-            bullets.append(Projectile(player.X, player.Y, classicBulletWidth, classicBullet, 10, 5, False, displayWidth, displayHeight))
-            bulletCoolDown = pygame.time.get_ticks()
+        if pressed[pygame.K_z]:
+        if player.cooldown <= 0:
+            player.shoot()
+            player.cooldown = player.timeBetweenShots
+        else:
+            player.cooldown -= 1
     if pressed[pygame.K_x]:
-        if pygame.time.get_ticks() - missileCooldown >= 500:
-            bullets.append(Projectile(player.X, player.Y, missileWidth, missile, 10, 10, True, displayWidth, displayHeight))
-            missileCooldown = pygame.time.get_ticks()
+        if player.missileCooldown <= 0:
+            player.shootHoming()
+            player.missileCooldown = player.timeBetweenMissiles
+        else:
+            player.missileCooldown -= 1
             
     #Shoot your ultimate
     if pressed[pygame.K_i]:
