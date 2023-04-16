@@ -1,4 +1,5 @@
 from Class.bulletHandler import BulletHandler
+from Pattern.enemiesPattern import firstPattern
 import pygame
 
 class Enemy():
@@ -32,6 +33,7 @@ class Enemy():
     
     def update(self):
         #shoot
+        firstPattern(self)
         if self.cooldown <= 0:
             self.bulletHandler.update()
             self.cooldown = self.timeBetweenShots*60

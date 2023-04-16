@@ -1,7 +1,7 @@
 import sys
 import pygame
 sys.path.append("/Mini-studio/Class")
-from Class.enemy import Enemy
+#from Class.enemy import Enemy
 
 def firstPattern(Enemy):
     
@@ -43,3 +43,4 @@ def firstPattern(Enemy):
         Enemy.y -=1
 
     Enemy.patternStep += 1
+    Enemy.bulletHandler.move(Enemy.x, Enemy.y)

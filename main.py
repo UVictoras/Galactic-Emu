@@ -152,7 +152,6 @@ while running:
 
     #Enemy
     for enemy in enemyList:
-        firstPattern(enemy)
         enemy.update()
         rect = pygame.Rect(enemy.x, enemy.y, enemy.size, enemy.size)
         
