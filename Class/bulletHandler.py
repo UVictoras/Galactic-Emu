@@ -22,15 +22,23 @@ class BulletHandler():
         self.isHoming = isHoming
 
     
-    def update(self):
+    def update(self, direction):
         #Import bullet image
         bulletWidth = self.img.get_width()
-        #create bullet
-        if self.isPlayer:
-            velocity = pygame.math.Vector2(0,-1)
-        else:
-            velocity = pygame.math.Vector2(0,1)
-        bullet = Projectile(self.X, self.Y, bulletWidth, self.img, velocity, 5, self.isHoming, 1920, 1080, self.projectileList, self.bulletSpeed, self.isPlayer)
+        numNegatives = math.floor(self.arrayNumber / 2)
+        numPositives = math.ceil(self.arrayNumber / 2)
+        arrayMax = numPositives - 1
+        arrayMin = -numNegatives
+
+        for array in range(arrayMin, arrayMax+1):
+            #create bullet
+            directionAngle = math.atan2(direction[1], direction[0])
+
+            radians = math.radians(array * self.angleBetweenArrays) + directionAngle
+            destX = math.cos(radians)
+            destY = math.sin(radians)
+            arrayDirection = (destX, destY)
+            bullet = Projectile(self.X, self.Y, bulletWidth, self.img, arrayDirection, 1, self.isHoming, 1920, 1080, self.projectileList, self.bulletSpeed, self.isPlayer)
 
     def move(self, targetX, targetY):
         '''Updates the position of the bullet handler'''
