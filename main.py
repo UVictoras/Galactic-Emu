@@ -73,7 +73,7 @@ imgEnemy = pygame.image.load("img/enemy.png").convert()
 imgEnemy = pygame.transform.scale(imgEnemy, (50, 50))
 
 enemyDelayList = [[0, 0, 50], [0, 0, 100], [0, 0, 50]]
-enemy1 = Enemy(50, 2, enemyDelayList[0][0], enemyDelayList[0][1], 50, displayWidth, displayHeight, 100, imgEnemy, 4, 10, 5, projectileList, 1, "left")
+enemy1 = Enemy(50, 3, enemyDelayList[0][0], enemyDelayList[0][1], 50, displayWidth, displayHeight, 100, imgEnemy, 4, 10, 5, projectileList, 1, "left")
 enemy2 = Enemy(50, 2, enemyDelayList[1][0], enemyDelayList[1][1], 50, displayWidth, displayHeight, 100, imgEnemy, 10, 3, 10, projectileList, 1, "left")
 enemy3 = Enemy(50, 2, enemyDelayList[2][0], enemyDelayList[2][1], 50, displayWidth, displayHeight, 100, imgEnemy, 10, 3, 10, projectileList, 1, "left")
 
