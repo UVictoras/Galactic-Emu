@@ -72,14 +72,13 @@ player = Player(10, 5, 50, displayWidth, displayHeight, 30, 60, 15, 5, projectil
 imgEnemy = pygame.image.load("img/enemy.png").convert()
 imgEnemy = pygame.transform.scale(imgEnemy, (50, 50))
 
-enemy1 = Enemy(50, 2, 0, 0, 50, displayWidth, displayHeight, 100, imgEnemy, 4, 10, 5, projectileList, 1, "left")
-enemy2 = Enemy(50, 2, 0, 0, 50, displayWidth, displayHeight, 100, imgEnemy, 10, 3, 10, projectileList, 1, "left")
-enemy3 = Enemy(50, 2, 0, 0, 50, displayWidth, displayHeight, 100, imgEnemy, 10, 3, 10, projectileList, 1, "left")
+enemyDelayList = [[0, 0, 50], [0, 0, 100], [0, 0, 50]]
+enemy1 = Enemy(50, 2, enemyDelayList[0][0], enemyDelayList[0][1], 50, displayWidth, displayHeight, 100, imgEnemy, 4, 10, 5, projectileList, 1, "left")
+enemy2 = Enemy(50, 2, enemyDelayList[1][0], enemyDelayList[1][1], 50, displayWidth, displayHeight, 100, imgEnemy, 10, 3, 10, projectileList, 1, "left")
+enemy3 = Enemy(50, 2, enemyDelayList[2][0], enemyDelayList[2][1], 50, displayWidth, displayHeight, 100, imgEnemy, 10, 3, 10, projectileList, 1, "left")
+
 enemyList = [enemy1, enemy2, enemy3]
 onScreenEnemiesList = []
-enemyDelay = 0
-nextEnemy = 100
-
 
 #Initiate dash coordinates
 timerDash = [0 , 0]
@@ -155,9 +154,9 @@ while running:
     playerRect = pygame.Rect(player.X, player.Y, player.size/2, player.size/2)
 
     #Add enemies at the right time
-    if enemyDelay <= 0 and enemyList != []:
+    if enemyDelayList != [] and enemyDelayList[0][2] <= 0 and enemyList != []:
         onScreenEnemiesList.append(enemyList.pop(0))
-        enemyDelay = nextEnemy
+        enemyDelayList.pop(0)
 
     for bullet in projectileList:
         if bullet.update(onScreenEnemiesList) == True:
@@ -171,8 +170,6 @@ while running:
                     player.getHit()
                     projectileList.pop(projectileList.index(bullet))
     
-    
-
     #Enemy
     for enemy in onScreenEnemiesList:
         enemy.update(player)
@@ -201,7 +198,7 @@ while running:
             score.score_increment(10)
             onScreenEnemiesList.pop(onScreenEnemiesList.index(enemy))
             
-        enemyDelay -= 1
+        
 
     for particle in particleList:
         if(particle.draw(screen, projectileList)):
@@ -234,7 +231,8 @@ while running:
     player.missileCooldown -= 1
     player.ultimateCooldown -= 1
 
-    
+    if enemyDelayList != []:
+        enemyDelayList[0][2] -= 1
 
     #Score grows automatically
     if pygame.time.get_ticks() - scoreTime >= 3000:
