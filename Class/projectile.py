@@ -9,6 +9,7 @@ class Projectile():
         self.velocity = velocity
         self.damage = damage
 
+        self.size = width
         self.width = width
         self.image = image
         self.displayWidth = displayWidth
