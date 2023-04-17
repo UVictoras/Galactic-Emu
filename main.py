@@ -76,6 +76,9 @@ enemy1 = Enemy(50, 2, 300, 0, 50, displayWidth, displayHeight, 100, imgEnemy, 4,
 enemy2 = Enemy(50, 2, 1200, 0, 50, displayWidth, displayHeight, 100, imgEnemy, 10, 3, 10, projectileList, 1, "left")
 enemy3 = Enemy(50, 2, 500, 0, 50, displayWidth, displayHeight, 100, imgEnemy, 10, 3, 10, projectileList, 1, "left")
 enemyList = [enemy1, enemy2, enemy3]
+onScreenEnemiesList = []
+enemyDelay = 0
+nextEnemy = 100
 
 
 #Initiate dash coordinates
@@ -163,23 +166,27 @@ while running:
                     player.getHit()
                     projectileList.pop(projectileList.index(bullet))
     
+    #Add enemies at the right time
+    if enemyDelay <= 0 and enemyList != []:
+        onScreenEnemiesList.append(enemyList.pop(0))
+        enemyDelay = nextEnemy
 
     #Enemy
-    for enemy in enemyList:
+    for enemy in onScreenEnemiesList:
         enemy.update(player)
         rect = pygame.Rect(enemy.x, enemy.y, enemy.size, enemy.size)
         
         screen.blit(enemy.image, (enemy.x, enemy.y))
         if enemy.y > enemy.displayHeight:
             enemy.health = 0
-            enemyList.pop(enemyList.index(enemy))
+            onScreenEnemiesList.pop(onScreenEnemiesList.index(enemy))
 
         #Collision bullet & enemy
         for bullet in projectileList:
             if bullet.isPlayer == True:
                 bulletRect = pygame.Rect(bullet.x, bullet.y, bullet.size, bullet.size)
                 if rect.colliderect(bulletRect):
-                    enemy.takeDmg(bullet.damage, enemyList)
+                    enemy.takeDmg(bullet.damage, onScreenEnemiesList)
                     score.score_increment(10)
                     projectileList.pop(projectileList.index(bullet))
 
@@ -190,7 +197,9 @@ while running:
         if rect.colliderect(playerRect):
             player.getHit()
             score.score_increment(10)
-            enemyList.pop(enemyList.index(enemy))
+            onScreenEnemiesList.pop(onScreenEnemiesList.index(enemy))
+            
+        enemyDelay -= 1
 
     for particle in particleList:
         if(particle.draw(screen, projectileList)):
