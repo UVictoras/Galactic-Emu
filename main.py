@@ -72,9 +72,9 @@ player = Player(10, 5, 50, displayWidth, displayHeight, 30, 60, 15, 5, projectil
 imgEnemy = pygame.image.load("img/enemy.png").convert()
 imgEnemy = pygame.transform.scale(imgEnemy, (50, 50))
 
-enemy1 = Enemy(50, 2, 300, 0, 50, displayWidth, displayHeight, 100, imgEnemy, 4, 10, 5, projectileList, 1, "left")
-enemy2 = Enemy(50, 2, 1200, 0, 50, displayWidth, displayHeight, 100, imgEnemy, 10, 3, 10, projectileList, 1, "left")
-enemy3 = Enemy(50, 2, 500, 0, 50, displayWidth, displayHeight, 100, imgEnemy, 10, 3, 10, projectileList, 1, "left")
+enemy1 = Enemy(50, 2, 0, 0, 50, displayWidth, displayHeight, 100, imgEnemy, 4, 10, 5, projectileList, 1, "left")
+enemy2 = Enemy(50, 2, 0, 0, 50, displayWidth, displayHeight, 100, imgEnemy, 10, 3, 10, projectileList, 1, "left")
+enemy3 = Enemy(50, 2, 0, 0, 50, displayWidth, displayHeight, 100, imgEnemy, 10, 3, 10, projectileList, 1, "left")
 enemyList = [enemy1, enemy2, enemy3]
 onScreenEnemiesList = []
 enemyDelay = 0
@@ -154,8 +154,13 @@ while running:
     player.move(velX, velY)
     playerRect = pygame.Rect(player.X, player.Y, player.size/2, player.size/2)
 
+    #Add enemies at the right time
+    if enemyDelay <= 0 and enemyList != []:
+        onScreenEnemiesList.append(enemyList.pop(0))
+        enemyDelay = nextEnemy
+
     for bullet in projectileList:
-        if bullet.update(enemyList) == True:
+        if bullet.update(onScreenEnemiesList) == True:
             projectileList.pop(projectileList.index(bullet))
         screen.blit(bullet.image, (bullet.x, bullet.y))
         #Collision bullet & enemy
@@ -166,10 +171,7 @@ while running:
                     player.getHit()
                     projectileList.pop(projectileList.index(bullet))
     
-    #Add enemies at the right time
-    if enemyDelay <= 0 and enemyList != []:
-        onScreenEnemiesList.append(enemyList.pop(0))
-        enemyDelay = nextEnemy
+    
 
     #Enemy
     for enemy in onScreenEnemiesList:
@@ -209,8 +211,8 @@ while running:
             shaking = True
         
         if(particle.doDamage):
-            for enemy in enemyList:
-                enemy.takeDmg(player.ultimateDmg, enemyList)
+            for enemy in onScreenEnemiesList:
+                enemy.takeDmg(player.ultimateDmg, onScreenEnemiesList)
 
     #Add a bullet to the projectileList list on press
     if pressed[pygame.K_w]:
