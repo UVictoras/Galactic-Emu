@@ -12,6 +12,7 @@ class Projectile():
         self.size = width
         self.width = width
         self.image = image
+        self.angle = 0
         self.displayWidth = displayWidth
         self.displayHeight = displayHeight
 
@@ -32,6 +33,11 @@ class Projectile():
         else:
             self.x += self.velocity[0] * self.speed
             self.y += self.velocity[1] * self.speed
+            # Calculer l'angle de rotation nécessaire pour pointer vers l'ennemi
+            angle_radians = math.atan2(self.velocity[0] * self.speed, self.velocity[1] * self.speed)
+            angle_degrees = math.degrees(angle_radians)
+            # Faire pivoter l'image du missile de l'angle calculé
+            self.angle = angle_degrees +180
 
         '''The bullet is destroyed when exiting the screen'''
         #del(self) doesnt actually delete the instance for some reason
@@ -64,11 +70,11 @@ class Projectile():
             self.x += dx / distance * self.speed
             self.y += dy / distance * self.speed
             # Calculer l'angle de rotation nécessaire pour pointer vers l'ennemi
-            angle_radians = math.atan2(dy, dx)
+            angle_radians = math.atan2(dx, dy)
             angle_degrees = math.degrees(angle_radians)
             # Faire pivoter l'image du missile de l'angle calculé
-            '''Casse tout !!!'''
-            rotated_image = pygame.transform.rotate(self.image, -angle_degrees - 90)
+            self.angle = angle_degrees + 180
+            # rotated_image = pygame.transform.rotate(self.image, -angle_degrees - 90)
 
         else:
             pass

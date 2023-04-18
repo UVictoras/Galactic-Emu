@@ -13,34 +13,28 @@ def firstPattern(Enemy):
         Enemy.patternStep = 0
 
     if Enemy.facing == "right" and Enemy.x == 0:
-        Enemy.x += Enemy.speed
-        Enemy.y += 1
+        Enemy.move(Enemy.speed, 1)
     elif Enemy.facing == "right" and Enemy.patternStep%6 == 0 and Enemy.patternStep < (1920 - Enemy.size)//2//Enemy.speed:
-        Enemy.x += Enemy.speed
+        Enemy.move(Enemy.speed, 0)
     elif Enemy.facing == "right" and Enemy.patternStep <= (1920 - Enemy.size)//2//Enemy.speed:
-        Enemy.x += Enemy.speed
-        Enemy.y += 1
+        Enemy.move(Enemy.speed, 1)
     
     if Enemy.facing == "right" and Enemy.patternStep > (1920 - Enemy.size)//2//Enemy.speed and (((Enemy.patternStep-(1920-Enemy.size))//2)//Enemy.speed)%6  == 0:
-        Enemy.x += Enemy.speed
+        Enemy.move(Enemy.speed, 0)
     elif Enemy.facing == "right" and Enemy.patternStep > (1920 - Enemy.size)//2//Enemy.speed:
-        Enemy.x += Enemy.speed
-        Enemy.y -= 1
+        Enemy.move(Enemy.speed, -1)
 
     if Enemy.facing == "left" and Enemy.patternStep == (1920 - Enemy.size)//Enemy.speed:
-        Enemy.x -= Enemy.speed
-        Enemy.y += 1
+        Enemy.move(-Enemy.speed, 1)
     elif Enemy.facing == "left" and Enemy.patternStep%6 == 0 and Enemy.patternStep < (1920 - Enemy.size)//2//Enemy.speed:
-        Enemy.x -= Enemy.speed
+        Enemy.move(-Enemy.speed, 0)
     elif Enemy.facing == "left" and Enemy.patternStep <= (1920 - Enemy.size)//2//Enemy.speed:
-        Enemy.x -= Enemy.speed
-        Enemy.y += 1
+        Enemy.move(-Enemy.speed, 1)
     
     if Enemy.facing == "left" and Enemy.patternStep > (1920 - Enemy.size)//2//Enemy.speed and (((Enemy.patternStep-(1920-Enemy.size))//2)//Enemy.speed)%6 == 0:
-        Enemy.x -= Enemy.speed
+        Enemy.move(-Enemy.speed, 0)
     elif Enemy.facing == "left" and Enemy.patternStep > (1920 - Enemy.size)//2//Enemy.speed:
-        Enemy.x -= Enemy.speed
-        Enemy.y -=1
+        Enemy.move(-Enemy.speed, -1)
 
     Enemy.patternStep += 1
     Enemy.bulletHandler.move(Enemy.x, Enemy.y)

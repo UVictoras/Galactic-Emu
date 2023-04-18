@@ -9,6 +9,7 @@ from Class.projectile import Projectile
 from Class.player import Player
 from Class.enemy import Enemy
 from Class.score import Score
+from Class.button import Button
 
 #Import Patterns
 from Pattern.enemiesPattern import *
@@ -26,12 +27,14 @@ pygame.display.set_caption("Bullet Hell")
 
 #Import background model
 backGround = pygame.image.load("img/back.png").convert()
-backGround = pygame.transform.scale(backGround, (displayWidth, displayWidth))
+backGround = pygame.transform.scale(backGround, (100, 100))
 backGroundHeight = backGround.get_height()
+backgroundWidth = backGround.get_width()
 
 #Pre-requisite for the screen scrolling
 trueScroll = 0 
-tiles = math.ceil(displayHeight / backGroundHeight) + 1
+tilesHeight = math.ceil(displayHeight / backGroundHeight) + 1
+tilesWidth = math.ceil(displayWidth / backgroundWidth) + 1
 
 #Import missile model
 missile = pygame.image.load("img/missile.png")
@@ -43,12 +46,21 @@ classicBullet =  pygame.image.load("img/bullet.png")
 classicBullet = pygame.transform.scale(classicBullet, (50, 50))
 classicBulletWidth = classicBullet.get_width()
 
+#Import special shoot
+bigBall = pygame.image.load("img/grosse_boule.png")
+bigBall = pygame.transform.scale(bigBall, (50, 50))
+
 #Import ultimate
 ultimateShoot = pygame.image.load("img/grosse_boule.png")
 ultimateShoot = pygame.transform.scale(ultimateShoot, (100, 100))
 ultimateShootWidth = ultimateShoot.get_width()
 
 ultimateSound = pygame.mixer.Sound("sound/seismic_charge.mp3")
+ultimateSound.set_volume(0.2)
+
+#Import Music
+bulletHellSound = pygame.mixer.Sound("sound/Bullet_Hell.mp3")
+bulletHellSound.set_volume(0.2)
 
 #projectileList & CD
 projectileList = []
@@ -69,16 +81,28 @@ player = Player(10, 5, 50, displayWidth, displayHeight, 30, 60, 15, 5, projectil
 
 
 #Create Enemy
-imgEnemy = pygame.image.load("img/enemy.png").convert()
+imgRailgun = pygame.image.load("img/railgun.png")
+imgRailgun = pygame.transform.scale(imgRailgun, (50, 50))
+imgEnemy = pygame.image.load("img/bozo.png")
 imgEnemy = pygame.transform.scale(imgEnemy, (50, 50))
 
-enemyDelayList = [[0, 0, 50], [0, 0, 100], [0, 0, 50]]
-enemy1 = Enemy(50, 3, enemyDelayList[0][0], enemyDelayList[0][1], 50, displayWidth, displayHeight, 100, imgEnemy, 4, 10, 5, projectileList, 1, "left")
-enemy2 = Enemy(50, 2, enemyDelayList[1][0], enemyDelayList[1][1], 50, displayWidth, displayHeight, 100, imgEnemy, 10, 3, 10, projectileList, 1, "left")
-enemy3 = Enemy(50, 2, enemyDelayList[2][0], enemyDelayList[2][1], 50, displayWidth, displayHeight, 100, imgEnemy, 10, 3, 10, projectileList, 1, "left")
+enemyDelayList = [[0, 0, 50], [0, 0, 100], [0, 0, 50], [0, 0, 100]]
+enemy1 = Enemy(50, 2, 300, 0, 50, displayWidth, displayHeight, 100, imgRailgun, bigBall, 4, 10, 5, projectileList, 1, "left")
+enemy2 = Enemy(50, 2, 1200, 0, 50, displayWidth, displayHeight, 100, imgEnemy, bigBall, 10, 3, 10, projectileList, 1, "left")
+enemy3 = Enemy(50, 2, 500, 0, 50, displayWidth, displayHeight, 100, imgEnemy, bigBall, 10, 3, 10, projectileList, 1, "left")
+enemy4 = Enemy(50, 1, 500, 0, 50, displayWidth, displayHeight, 100, imgEnemy, classicBullet, 4, 4, 30, projectileList, 1, "left", 10, 1, 0, 2, bigBall)
 
-enemyList = [enemy1, enemy2, enemy3]
+enemyList = [enemy1, enemy2, enemy3, enemy4]
 onScreenEnemiesList = []
+
+#Create Button
+buttonSurface = pygame.image.load("img/button.png")
+buttonSurface = pygame.transform.scale(buttonSurface, (200, 75))
+
+button = Button(buttonSurface, 500, 500, "Change weapon price : 30", True, 30, Button.ChangeWeapon, imgEnemy)
+button2 = Button(buttonSurface, 900, 700, "Do nothing", False, 0, Button.ChangeWeapon, None)
+
+buttonList = [button, button2]
 
 #Initiate dash coordinates
 timerDash = [0 , 0]
@@ -86,14 +110,15 @@ timerDash = [0 , 0]
 #Initiate score
 score = Score()
 
+#Import a font
+font = pygame.font.Font(None, 36)
+
 # Main Loop
 running = True
 while running:
     # run the game at a constant 60fps
     clock.tick(60)
 
-    font = pygame.font.Font(None, 36)
-    
     #Close window on Escape press
     for events in pygame.event.get():
         if events.type == pygame.QUIT:
@@ -101,20 +126,26 @@ while running:
         elif events.type == pygame.KEYDOWN:
             if events.key == pygame.K_ESCAPE:
                 running=False
+        if events.type == pygame.MOUSEBUTTONDOWN:
+            for button in buttonList:
+                button.checkForInput(pygame.mouse.get_pos(), player)
+        for button in buttonList:
+            button.changeColor(pygame.mouse.get_pos())
+     
+    #Play msic in loop
+    if bulletHellSound.get_num_channels() == 0:
+        bulletHellSound.play()
     
-     #draw scrolling background
-    
-    scroll = int(trueScroll)
-
     #screen shake
     if shaking:
-        scroll += random.randint(0, screenShake) - screenShake/2
+        trueScroll += random.randint(0, screenShake) - screenShake/2
 
-    for i in range(0, tiles):
-        screen.blit(backGround, (0, i * displayWidth + scroll))
-    trueScroll -= 1
+    for i in range(0, tilesHeight):
+        for j in range(0, tilesWidth):
+            screen.blit(backGround, (j*backGround.get_width(), i * backGround.get_height() + trueScroll))
+    trueScroll += 1
     #reset scroll
-    if abs(trueScroll) > displayWidth:
+    if abs(trueScroll) > backGround.get_height():
         trueScroll = 0
 
     # Slow movement and dash
@@ -134,7 +165,7 @@ while running:
     elif timerDash[0] == 0 and timerDash[1] > 0:
         timerDash[1] -= 1
 
-     #PLAYER Y movement
+    #PLAYER Y movement
     if pressed[pygame.K_UP]:
         velY = -1
     elif pressed[pygame.K_DOWN]:
@@ -161,6 +192,7 @@ while running:
     for bullet in projectileList:
         if bullet.update(onScreenEnemiesList) == True:
             projectileList.pop(projectileList.index(bullet))
+        rotated_image = pygame.transform.rotate(bullet.image, bullet.angle)
         screen.blit(bullet.image, (bullet.x, bullet.y))
         #Collision bullet & enemy
         for bullet in projectileList:
@@ -190,16 +222,14 @@ while running:
                     projectileList.pop(projectileList.index(bullet))
 
                 if(enemy.health <= 0):
+                    player.money += 10
                     score.score_increment(enemy.score)
-                    #enemyList.pop(enemyList.index(enemy))
                     break
         if rect.colliderect(playerRect):
             player.getHit()
             score.score_increment(10)
             onScreenEnemiesList.pop(onScreenEnemiesList.index(enemy))
             
-        
-
     for particle in particleList:
         if(particle.draw(screen, projectileList)):
             particleList.pop(particleList.index(particle))
@@ -249,6 +279,12 @@ while running:
     screen.blit(livesText, (10, 30))
     ultimateText = font.render(f'Ultimate in: {math.ceil(player.ultimateCooldown/60)}', True, (255, 255, 255))
     screen.blit(ultimateText, (10, 50))
+    moneyText = font.render(f'Money: {player.money}', True, (255, 255, 255))
+    screen.blit(moneyText, (10, 70))
+
+    for button in buttonList:
+        screen.blit(button.image, button.rect)
+        screen.blit(button.text, button.text_rect)
     pygame.display.update()
 
 pygame.quit()
