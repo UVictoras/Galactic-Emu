@@ -38,13 +38,12 @@ tilesWidth = math.ceil(displayWidth / backgroundWidth) + 1
 
 #Import missile model
 missile = pygame.image.load("img/missile.png")
-missile = pygame.transform.scale(missile, (50, 50))
+missile = pygame.transform.scale(missile, (missile.get_width(), missile.get_height()))
 missileWidth = missile.get_width()
 
 #Import bullets 
 classicBullet =  pygame.image.load("img/bullet.png")
-classicBullet = pygame.transform.scale(classicBullet, (50, 50))
-classicBulletWidth = classicBullet.get_width()
+classicBullet = pygame.transform.scale(classicBullet, (classicBullet.get_width()*2, classicBullet.get_height()*2))
 
 #Import special shoot
 bigBall = pygame.image.load("img/grosse_boule.png")
@@ -77,7 +76,7 @@ screenShake = 40
 imgPlayer = pygame.image.load("img/player.png")
 imgPlayer = pygame.transform.scale(imgPlayer, (50, 50))
 
-player = Player(10, 5, 50, displayWidth, displayHeight, 30, 60, 15, 5, projectileList)
+player = Player(10, 5, 50, displayWidth, displayHeight, 30, 60, 15, 5, projectileList, classicBullet, missile)
 
 
 #Create Enemy
@@ -86,12 +85,12 @@ imgRailgun = pygame.transform.scale(imgRailgun, (50, 50))
 imgEnemy = pygame.image.load("img/bozo.png")
 imgEnemy = pygame.transform.scale(imgEnemy, (50, 50))
 
-enemyDelayList = [[0, 0, 50], [0, 0, 100], [0, 0, 50], [0, 0, 100]]
+enemyDelayList = [[0, 0, 50], [0, 0, 100], [0, 0, 50], [0, 0, 100], [0, 0, 100]]
 enemy1 = Enemy(True, 50, 2, 300, 0, 50, displayWidth, displayHeight, 100, imgRailgun, bigBall, 4, 10, 5, projectileList, 1, "left")
 enemy2 = Enemy(True,50, 2, 1200, 0, 50, displayWidth, displayHeight, 100, imgEnemy, bigBall, 10, 3, 10, projectileList, 1, "left")
 enemy3 = Enemy(True,50, 2, 500, 0, 50, displayWidth, displayHeight, 100, imgEnemy, bigBall, 10, 3, 10, projectileList, 1, "left")
 enemy4 = Enemy(True, 50, 1, 500, 0, 50, displayWidth, displayHeight, 100, imgEnemy, classicBullet, 4, 4, 30, projectileList, 1, "left", 0, 10, 1, 0, 2, bigBall)
-enemy5 = Enemy(False, 50, 1, 500, 0, 50, displayWidth, displayHeight, 100, imgEnemy, classicBullet, 4, 4, 90, projectileList, 0.5, "left", 3, 10, 3, 10, 1, bigBall)
+enemy5 = Enemy(False, 50, 0.5, 500, 0, 50, displayWidth, displayHeight, 100, imgEnemy, classicBullet, 1, 4, 90, projectileList, 0.5, "left", 3, 1, 1, 0, 3, bigBall)
 
 enemyList = [enemy1, enemy2, enemy3, enemy4]
 onScreenEnemiesList = []
@@ -113,6 +112,15 @@ score = Score()
 
 #Import a font
 font = pygame.font.Font(None, 36)
+
+#Define rotate function for bullet hitboxes
+def rotate(image, rect, angle):
+    """Rotate the image while keeping its center."""
+    # Rotate the original image without modifying it.
+    new_image = pygame.transform.rotate(image, angle)
+    # Get a new rect with the center of the old rect.
+    rect = new_image.get_rect(center=rect.center)
+    return new_image, rect
 
 # Main Loop
 running = True
@@ -143,10 +151,11 @@ while running:
 
     for i in range(0, tilesHeight):
         for j in range(0, tilesWidth):
-            screen.blit(backGround, (j*backGround.get_width(), i * backGround.get_height() + trueScroll))
+            screen.blit(backGround, (j*backGround.get_width(), i*backGround.get_height() - trueScroll))
+    
     trueScroll += 1
-    #reset scroll
-    if abs(trueScroll) > backGround.get_height():
+    # reset scroll
+    if trueScroll >= backGround.get_height():
         trueScroll = 0
 
     # Slow movement and dash
@@ -183,7 +192,9 @@ while running:
         velX = 0
         
     player.move(velX, velY)
-    playerRect = pygame.Rect(player.X, player.Y, player.size/2, player.size/2)
+    playerHitbox = pygame.Rect(0,0, player.size/8, player.size/8)
+    # center the hitbox on the ship's cockpit
+    playerRect = pygame.Rect(player.X+player.size/2 - playerHitbox.width/2, player.Y+player.size/2, playerHitbox.width, playerHitbox.height)
 
     #Add enemies at the right time
     if enemyDelayList != [] and enemyDelayList[0][2] <= 0 and enemyList != []:
@@ -193,15 +204,15 @@ while running:
     for bullet in projectileList:
         if bullet.update(onScreenEnemiesList) == True:
             projectileList.pop(projectileList.index(bullet))
-        rotated_image = pygame.transform.rotate(bullet.image, bullet.angle)
-        screen.blit(bullet.image, (bullet.x, bullet.y))
-        #Collision bullet & enemy
-        for bullet in projectileList:
-            if bullet.isPlayer == False:
-                bulletRect = pygame.Rect(bullet.x, bullet.y, bullet.size, bullet.size)
-                if playerRect.colliderect(bulletRect):
-                    player.getHit()
-                    projectileList.pop(projectileList.index(bullet))
+        #rotated_image = pygame.transform.rotate(bullet.image, bullet.angle)
+        bulletRect = pygame.Rect(bullet.x, bullet.y, bullet.image.get_width(), bullet.image.get_height())
+        rotated_image, bulletRect = rotate(bullet.image, bulletRect, bullet.angle)
+        screen.blit(rotated_image, (bullet.x, bullet.y))
+        if bullet.isPlayer == False:
+            #pygame.draw.rect(screen, (255,0,0), bulletRect)
+            if playerRect.colliderect(bulletRect):
+                player.getHit()
+                projectileList.pop(projectileList.index(bullet))
     
     #Enemy
     for enemy in onScreenEnemiesList:

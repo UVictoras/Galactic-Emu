@@ -1,16 +1,16 @@
 import pygame
 import math
 import pygame
+
 class Projectile():
-    def __init__(self, x, y, width, image, velocity, damage, isHoming, displayWidth, displayHeight, projectileList, speed, player=False, enemyList = [], playerPos = (0,0)):
+    def __init__(self, x, y, size, image, velocity, damage, isHoming, displayWidth, displayHeight, projectileList, speed, player=False, rotation=0):
         self.isPlayer = player
         self.x = x
         self.y = y
         self.velocity = velocity
         self.damage = damage
 
-        self.size = width
-        self.width = width
+        self.size = size
         self.image = image
         self.angle = 0
         self.displayWidth = displayWidth
@@ -18,8 +18,6 @@ class Projectile():
 
         self.isHoming = isHoming
         self.speed = speed
-        self.enemyList = enemyList
-        self.playerPos = playerPos
         self.rotationSpeed = 10
 
         projectileList.append(self)
@@ -41,16 +39,16 @@ class Projectile():
 
         '''The bullet is destroyed when exiting the screen'''
         #del(self) doesnt actually delete the instance for some reason
-        if self.x < 0 - self.width:
+        if self.x < 0 - self.size:
             del(self)
             return True
-        elif self.x > self.displayWidth + self.width:
+        elif self.x > self.displayWidth + self.size:
             del(self)
             return True
-        if self.y < 0 - self.width:
+        if self.y < 0 - self.size:
             del(self)
             return True
-        elif self.y > self.displayHeight + self.width:
+        elif self.y > self.displayHeight + self.size:
             del(self)
             return True
 

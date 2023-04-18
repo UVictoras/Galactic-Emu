@@ -4,7 +4,7 @@ from Class.bulletHandler import BulletHandler
 from Class.particle import Particle
 
 class Player():
-    def __init__(self, basicSpeed, slowSpeed, size, displayWidth, displayHeight, dashSpeed,cooldownDash,timeDash, lives, projectileList):
+    def __init__(self, basicSpeed, slowSpeed, size, displayWidth, displayHeight, dashSpeed,cooldownDash,timeDash, lives, projectileList, imgBullet, imgMissile):
         self.X = 1000
         self.Y = 1000
         self.basicSpeed = basicSpeed
@@ -18,6 +18,8 @@ class Player():
         self.timeDash = timeDash
         self.lives = lives
         self.money = 0
+        self.bulletImg = imgBullet
+        self.missileImg = imgMissile
 
         self.projectileList = projectileList
         self.arrayNumber = 3
@@ -57,8 +59,8 @@ class Player():
             self.Y = self.displayHeight - self.size
         if self.Y < 0:
             self.Y = 0
-        self.bulletHandler.move(self.X, self.Y)
-        self.missileHandler.move(self.X, self.Y)
+        self.bulletHandler.move(self.X+self.size/4, self.Y+self.size/4)
+        self.missileHandler.move(self.X+self.size/4, self.Y+self.size/4)
     
     def getHit(self):
         if self.lives > 0:
