@@ -4,7 +4,7 @@ import pygame, math
 
 class Enemy():
 
-    def __init__(self,health, speed, x, y, size, displayWidth, displayHeight, score, image, bulletImg1, bulletSpeed, arrayNumber, angleBetweenArrays, projectileList, timeBetweenShots, facing, bulletSpeed2 = 0, arrayNumber2 = 0, angleBetweenArrays2 = 0, timeBetweenShots2=0, bulletImg2=[]):
+    def __init__(self,aimAtPlayer,health, speed, x, y, size, displayWidth, displayHeight, score, image, bulletImg1, bulletSpeed, arrayNumber, angleBetweenArrays, projectileList, timeBetweenShots, facing, bulletRotation=0, bulletSpeed2 = 0, arrayNumber2 = 0, angleBetweenArrays2 = 0, timeBetweenShots2=0, bulletImg2=[], aimAtPlayer2=True, bulletRotation2 = 0):
         self.health = health
         self.speed = speed
         self.x = x
@@ -18,6 +18,9 @@ class Enemy():
         self.timeBetweenShots2 = timeBetweenShots2
         self.cooldown = self.timeBetweenShots
         self.cooldown2 = self.timeBetweenShots2
+
+        self.aimAtPlayer = aimAtPlayer
+        self.aimtAtPlayer2 = aimAtPlayer2
         self.facing = facing
         self.patternStep = 0
         self.bulletImg1 = bulletImg1
@@ -46,13 +49,13 @@ class Enemy():
         if(self.health <= 0):
             enemyList.pop(enemyList.index(self))
     
-    def update(self, player=None):
+    def update(self, player):
         #move
         firstPattern(self)
         if self.cooldown <= 0:
             #shoot
             direction = (0, 1)
-            if player:
+            if self.aimAtPlayer:
                 radians = math.atan2(player.Y - self.y, player.X - self.x)
                 destX = math.cos(radians)
                 destY = math.sin(radians)
@@ -66,7 +69,7 @@ class Enemy():
         if self.cooldown2 <= 0 - self.cooldown/2 and len(self.BHList) > 1:
             #shoot
             direction = (0, 1)
-            if player:
+            if self.aimtAtPlayer2:
                 radians = math.atan2(player.Y - self.y, player.X - self.x)
                 destX = math.cos(radians)
                 destY = math.sin(radians)
