@@ -1,5 +1,5 @@
 from Class.bulletHandler import BulletHandler
-from Pattern.enemiesPattern import firstPattern
+from Functions.enemiesPattern import firstPattern
 import pygame, math
 
 class Enemy():
