@@ -8,6 +8,7 @@ from Class.player import Player
 from Class.enemy import Enemy
 from Class.score import Score
 from Class.button import Button
+from Class.boss import Boss
 
 from Functions.enemiesPattern import *
 
@@ -42,11 +43,11 @@ def play(missileA, classicBulletA, projectileListA, playerA):
     classicBullet = classicBulletA
 
     #Import special shoot
-    bigBall = pygame.image.load("img/grosse_boule.png")
+    bigBall = pygame.image.load("img/bigBall.png")
     bigBall = pygame.transform.scale(bigBall, (50, 50))
 
     #Import ultimate
-    ultimateShoot = pygame.image.load("img/grosse_boule.png")
+    ultimateShoot = pygame.image.load("img/bigBall.png")
     ultimateShoot = pygame.transform.scale(ultimateShoot, (100, 100))
     ultimateShootWidth = ultimateShoot.get_width()
 
@@ -56,6 +57,9 @@ def play(missileA, classicBulletA, projectileListA, playerA):
     #Import Music
     bulletHellSound = pygame.mixer.Sound("sound/Bullet_Hell.mp3")
     bulletHellSound.set_volume(0.2)
+
+    bossMusic = pygame.mixer.Sound("sound/bossFight.mp3")
+    bossMusic.set_volume(0.2)
 
     #projectileList & CD
     projectileList = projectileListA
@@ -81,15 +85,25 @@ def play(missileA, classicBulletA, projectileListA, playerA):
     imgEnemy = pygame.image.load("img/bozo.png")
     imgEnemy = pygame.transform.scale(imgEnemy, (50, 50))
 
-    enemyDelayList = [[0, 0, 50], [0, 0, 100], [0, 0, 50], [0, 0, 100], [0, 0, 100]]
+    enemyDelayList = [[0, 0, 50], [0, 0, 100], [0, 0, 50], [0, 0, 100], [0, 0, 100], [0, 0, 100]]
     enemy1 = Enemy(True, 50, 2, 300, 0, 50, displayWidth, displayHeight, 100, imgRailgun, bigBall, 4, 10, 5, projectileList, 1, "left", firstPattern)
     enemy2 = Enemy(True,50, 2, 1200, 0, 50, displayWidth, displayHeight, 100, imgEnemy, bigBall, 10, 3, 10, projectileList, 1, "left", firstPattern)
     enemy3 = Enemy(True,50, 2, 500, 0, 50, displayWidth, displayHeight, 100, imgEnemy, bigBall, 10, 3, 10, projectileList, 1, "left", firstPattern)
     enemy4 = Enemy(True, 50, 1, 500, 0, 50, displayWidth, displayHeight, 100, imgEnemy, classicBullet, 4, 4, 30, projectileList, 1, "left", 0, 10, 1, 0, 2, bigBall, firstPattern)
-    enemy5 = Enemy(False, 50, 0.5, 500, 0, 50, displayWidth, displayHeight, 100, imgEnemy, classicBullet, 1, 4, 90, projectileList, 0.5, "left", 3, 1, 1, 0, 3, bigBall, firstPattern)
+    enemy5 = Enemy(False, 50, 0.5, 500, 0, 50, displayWidth, displayHeight, 100, imgEnemy, classicBullet, 1, 4, 90, projectileList, 0.5, "left", 3, 1, 3, 10, 3, bigBall, firstPattern)
+    enemy6 = Enemy(False, 50, 0.5, 500, 0, 50, displayWidth, displayHeight, 100, imgEnemy, classicBullet, 1, 4, 90, projectileList, 0.5, "left", 3, 1, 4, 90, 0.5, classicBullet, False, -6)
 
-    enemyList = [enemy1, enemy2, enemy3, enemy4]
+    enemyList = [enemy1, enemy2, enemy3, enemy4, enemy5, enemy6]
     onScreenEnemiesList = []
+
+    #Create Boss
+    bossSize = 300
+    bossImg = pygame.image.load("img/boss1.png")
+    bossImg = pygame.transform.scale(bossImg, (bossSize, bossSize))
+    boss = Boss(10000, 1, 0, 0, bossSize, 1920, 1080, 1000, bossImg, projectileList, "Left")
+    enemyList.append(boss)
+    bossFight = True
+    enemyList.append(boss)
 
     #Create Button
     buttonSurface = pygame.image.load("img/button.png")
@@ -140,6 +154,8 @@ def play(missileA, classicBulletA, projectileListA, playerA):
         #Play msic in loop
         if bulletHellSound.get_num_channels() == 0:
             bulletHellSound.play()
+        '''if bossMusic.get_num_channels() == 0:
+            bossMusic.play()'''
         
         #screen shake
         if shaking:
@@ -213,12 +229,21 @@ def play(missileA, classicBulletA, projectileListA, playerA):
         #Enemy
         for enemy in onScreenEnemiesList:
             enemy.update(player)
-            rect = pygame.Rect(enemy.x, enemy.y, enemy.size, enemy.size)
+            if enemy.__class__.__name__ == "Boss":
+                bossHitbox = pygame.Rect(0,0, boss.size/2, boss.size)
+                # center the hitbox on the boss
+                rect = pygame.Rect(boss.x + boss.size/2 - bossHitbox.width/2, boss.y, bossHitbox.width, bossHitbox.height)
+            else:
+                rect = pygame.Rect(enemy.x, enemy.y, enemy.size, enemy.size)
+            #pygame.draw.rect(screen, (255,0,0), rect)
             
             screen.blit(enemy.image, (enemy.x, enemy.y))
             if enemy.y > enemy.displayHeight:
-                enemy.health = 0
-                onScreenEnemiesList.pop(onScreenEnemiesList.index(enemy))
+                if enemy.__class__.__name__ == "Boss":
+                    boss.move(0,-1)
+                else:
+                    enemy.health = 0
+                    enemyList.pop(enemyList.index(enemy))
 
             #Collision bullet & enemy
             for bullet in projectileList:
@@ -235,8 +260,11 @@ def play(missileA, classicBulletA, projectileListA, playerA):
                         break
             if rect.colliderect(playerRect):
                 player.getHit()
-                score.score_increment(10)
-                onScreenEnemiesList.pop(onScreenEnemiesList.index(enemy))
+                if enemy.__class__.__name__ == "Enemy":
+                    score.score_increment(10)
+                    enemyList.pop(enemyList.index(enemy))
+                else:
+                    enemy.health -= 10
                 
         for particle in particleList:
             if(particle.draw(screen, projectileList)):
@@ -289,6 +317,8 @@ def play(missileA, classicBulletA, projectileListA, playerA):
         screen.blit(ultimateText, (10, 50))
         moneyText = font.render(f'Money: {player.money}', True, (255, 255, 255))
         screen.blit(moneyText, (10, 70))
+        bossHPText = font.render(f'Boss HP: {boss.health}', True, (255, 255, 255))
+        screen.blit(bossHPText, (10, 100))
 
         for button in buttonList:
             screen.blit(button.image, button.rect)

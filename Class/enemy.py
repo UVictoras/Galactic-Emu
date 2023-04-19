@@ -37,7 +37,7 @@ class Enemy():
             self.bulletHandler2.move(self.x, self.y)
             self.BHList.append(self.bulletHandler2)
         for bulletHandler in self.BHList:
-            bulletHandler.move(self.x, self.y)
+            bulletHandler.move(self.x + self.size/2, self.y + self.size/2)
         
     def move(self, veloX, veloY):
         self.x = self.x + veloX * self.speed
@@ -57,7 +57,10 @@ class Enemy():
             #shoot
             direction = (0, 1)
             if self.aimAtPlayer:
-                radians = math.atan2(player.Y - self.y, player.X - self.x)
+                playerHitbox = pygame.Rect(0,0, player.size/8, player.size/8)
+                # center the hitbox on the ship's cockpit
+                target = pygame.math.Vector2(player.X+player.size/2 - playerHitbox.width/4, player.Y+player.size/4)
+                radians = math.atan2(target.y - self.y, target.x - self.x)
                 destX = math.cos(radians)
                 destY = math.sin(radians)
                 direction = (destX, destY)

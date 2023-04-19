@@ -3,7 +3,7 @@ import math
 import pygame
 
 class Projectile():
-    def __init__(self, x, y, size, image, velocity, damage, isHoming, displayWidth, displayHeight, projectileList, speed, player=False, rotation=0):
+    def __init__(self, x, y, size, image, velocity, damage, isHoming, displayWidth, displayHeight, speed, player=False):
         self.isPlayer = player
         self.x = x
         self.y = y
@@ -20,7 +20,6 @@ class Projectile():
         self.speed = speed
         self.rotationSpeed = 10
 
-        projectileList.append(self)
         self.pos = pygame.math.Vector2(self.x, self.y)
         
         
@@ -59,7 +58,7 @@ class Projectile():
             for enemy in self.enemyList:
                 if distance > pygame.math.Vector2.distance_to(pygame.math.Vector2(enemy.x, enemy.y), pygame.math.Vector2(self.x, self.y)):
                     distance = pygame.math.Vector2.distance_to(pygame.math.Vector2(enemy.x, enemy.y), pygame.math.Vector2(self.x, self.y))
-                    target = pygame.Vector2(enemy.x, enemy.y)
+                    target = pygame.Vector2(enemy.x + enemy.size/2, enemy.y + enemy.size/2)
                     
             dx = target.x - self.x
             dy = target.y - self.y

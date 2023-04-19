@@ -23,12 +23,12 @@ class Player():
 
         self.projectileList = projectileList
         self.arrayNumber = 3
-        self.bulletSpeed = 50
+        self.bulletSpeed = 25
         self.angleBetweenArrays = 10
         #60 = 1sec
         self.timeBetweenShots = 0.3
         self.cooldown = self.timeBetweenShots
-        self.timeBetweenMissiles = 0.3
+        self.timeBetweenMissiles = 0.9
         self.missileCooldown = self.timeBetweenMissiles
         self.timeBetweenUltimates = 60
         self.ultimateCooldown = self.timeBetweenUltimates

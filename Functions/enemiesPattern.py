@@ -38,3 +38,15 @@ def firstPattern(Enemy):
 
     Enemy.patternStep += 1
     Enemy.bulletHandler.move(Enemy.x, Enemy.y)
+
+def bossPattern(Enemy, patternNum):
+    if patternNum == 1:
+        if Enemy.x <= 0:
+            Enemy.facing = "right"
+        elif Enemy.x >= 1920 - Enemy.size:
+            Enemy.facing = "left"
+
+        if Enemy.facing == "left":
+            Enemy.move(-1,0)
+        elif Enemy.facing == "right":
+            Enemy.move(1, 0)
