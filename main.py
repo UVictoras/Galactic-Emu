@@ -14,7 +14,6 @@ from Class.button import Button
 #Import Patterns
 from Functions.enemiesPattern import *
 from Functions.play import *
-from Functions.quitGame import *
 
 buttonSurface = pygame.image.load("img/button.png")
 buttonSurface = pygame.transform.scale(buttonSurface, (200, 75))
@@ -57,7 +56,7 @@ def main_menu():
 
         PLAY_BUTTON = Button(buttonSurface, 640, 250, "Play", False, 0, play, buttonSurface)
         OPTIONS_BUTTON = Button(buttonSurface, 640, 400, "Options", False, 0, options, buttonSurface)
-        QUIT_BUTTON = Button(buttonSurface, 640, 550, "Quit", False, 0, quitGame, buttonSurface)
+        QUIT_BUTTON = Button(buttonSurface, 640, 550, "Quit", False, 0, None, buttonSurface)
 
         SCREEN.blit(MENU_TEXT, MENU_RECT)
 
@@ -75,8 +74,7 @@ def main_menu():
                 if OPTIONS_BUTTON.checkForInput(MENU_MOUSE_POS, player):
                     options()
                 if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS, player):
-                    running = quitGame()
-                    print("You left")
+                    running = False
         pygame.display.update()
 
 main_menu()
