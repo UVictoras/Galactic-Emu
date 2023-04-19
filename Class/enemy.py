@@ -4,7 +4,7 @@ import pygame, math
 
 class Enemy():
 
-    def __init__(self,aimAtPlayer,health, speed, x, y, size, displayWidth, displayHeight, score, image, bulletImg1, bulletSpeed, arrayNumber, angleBetweenArrays, projectileList, timeBetweenShots, facing, bulletRotation=0, bulletSpeed2 = 0, arrayNumber2 = 0, angleBetweenArrays2 = 0, timeBetweenShots2=0, bulletImg2=[], aimAtPlayer2=True, bulletRotation2 = 0):
+    def __init__(self,aimAtPlayer,health, speed, x, y, size, displayWidth, displayHeight, score, image, bulletImg1, bulletSpeed, arrayNumber, angleBetweenArrays, projectileList, timeBetweenShots, facing, bulletRotation=0, bulletSpeed2 = 0, arrayNumber2 = 0, angleBetweenArrays2 = 0, timeBetweenShots2=0, bulletImg2=[], aimAtPlayer2=True, bulletRotation2 = 0,  pattern=firstPattern):
         self.health = health
         self.speed = speed
         self.x = x
@@ -22,6 +22,7 @@ class Enemy():
         self.aimAtPlayer = aimAtPlayer
         self.aimtAtPlayer2 = aimAtPlayer2
         self.facing = facing
+        self.pattern = pattern
         self.patternStep = 0
         self.bulletImg1 = bulletImg1
         self.BHList = []
@@ -51,7 +52,7 @@ class Enemy():
     
     def update(self, player):
         #move
-        firstPattern(self)
+        self.pattern(self)
         if self.cooldown <= 0:
             #shoot
             direction = (0, 1)
