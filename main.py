@@ -69,7 +69,7 @@ def main_menu():
                 if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS, player):
                     play(missile, classicBullet, projectileList, player)
                 if OPTIONS_BUTTON.checkForInput(MENU_MOUSE_POS, player):
-                    options()
+                    gameOptions()
                 if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS, player):
                     running = False
         pygame.display.update()
