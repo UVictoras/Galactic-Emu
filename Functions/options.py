@@ -2,9 +2,8 @@ import pygame
 import sys
 
 from Class.button import Button
-from main import main_menu, get_font
 
-def options(SCREEN):
+def gameOptions(SCREEN):
     while True:
         OPTIONS_MOUSE_POS = pygame.mouse.get_pos()
 

@@ -8,8 +8,9 @@ from Class.button import Button
 
 #Import Patterns
 from Functions.enemiesPattern import *
-from Functions.play import *
 from Functions.options import *
+from Functions.play import *
+
 
 buttonSurface = pygame.image.load("img/button.png")
 buttonSurface = pygame.transform.scale(buttonSurface, (200, 75))
@@ -51,7 +52,7 @@ def main_menu():
         MENU_RECT = MENU_TEXT.get_rect(center=(640, 100))
 
         PLAY_BUTTON = Button(buttonSurface, 640, 250, "Play", False, 0, play, buttonSurface)
-        OPTIONS_BUTTON = Button(buttonSurface, 640, 400, "Options", False, 0, options, buttonSurface)
+        OPTIONS_BUTTON = Button(buttonSurface, 640, 400, "Options", False, 0, gameOptions, buttonSurface)
         QUIT_BUTTON = Button(buttonSurface, 640, 550, "Quit", False, 0, None, buttonSurface)
 
         SCREEN.blit(MENU_TEXT, MENU_RECT)
