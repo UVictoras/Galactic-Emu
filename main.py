@@ -1,19 +1,15 @@
 #Import librairies
 import pygame, sys
-import math
 import pygame.time
-import random
 
 #Import Classes
-from Class.projectile import Projectile
 from Class.player import Player
-from Class.enemy import Enemy
-from Class.score import Score
 from Class.button import Button
 
 #Import Patterns
 from Functions.enemiesPattern import *
 from Functions.play import *
+from Functions.options import *
 
 buttonSurface = pygame.image.load("img/button.png")
 buttonSurface = pygame.transform.scale(buttonSurface, (200, 75))
