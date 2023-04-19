@@ -26,6 +26,8 @@ class Button():
 			if self.isShopping and self.price <= player.money:
 				player.money -= self.price
 				self.function(player, self.newImg)
+			return True
+		return False
 			# img = pygame.image.load("img/emeu.jpg")
 			# img = pygame.transform.scale(img, (50, 50))
 			# player.bulletHandler.img = img
