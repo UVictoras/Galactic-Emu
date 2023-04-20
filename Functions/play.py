@@ -93,6 +93,7 @@ def play(missileA, classicBulletA, projectileListA, playerA):
     enemy5 = Enemy(False, 50, 0.5, 500, 0, 50, displayWidth, displayHeight, 100, imgEnemy, classicBullet, 1, 4, 90, projectileList, 0.5, "left", 3, 1, 3, 10, 3, bigBall)
     enemy6 = Enemy(False, 50, 0.5, 500, 0, 50, displayWidth, displayHeight, 100, imgEnemy, classicBullet, 1, 4, 90, projectileList, 0.5, "left", 3, 1, 4, 90, 0.5, classicBullet, False, -6)
     enemyList  = [enemy1, enemy2, enemy3, enemy4, enemy5, enemy6]
+    #enemyList = []
     onScreenEnemiesList = []
 
     #create boss
@@ -100,10 +101,8 @@ def play(missileA, classicBulletA, projectileListA, playerA):
     bossImg = pygame.image.load("img/boss1.png")
     bossImg = pygame.transform.scale(bossImg, (bossSize, bossSize))
     boss = Boss(10000, 1, 0, 0, bossSize, 1920, 1080, 1000, bossImg, projectileList, "Left")
-    enemyList.append(boss)
+    #onScreenEnemiesList.append(boss)
     bossFight = True
-    enemyList.append(boss)
-
 
     # Create Button
     button_surface = pygame.image.load("img/button.png")
