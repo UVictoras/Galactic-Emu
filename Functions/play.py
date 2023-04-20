@@ -13,7 +13,6 @@ from Class.boss import Boss
 from Functions.enemiesPattern import *
 
 def play(missileA, classicBulletA, projectileListA, playerA):
-    #Init the pygame & clock
     pygame.init()
     clock = pygame.time.Clock()
 
@@ -28,21 +27,21 @@ def play(missileA, classicBulletA, projectileListA, playerA):
     backGround = pygame.image.load("img/back.png").convert()
     backGround = pygame.transform.scale(backGround, (100, 100))
     backGroundHeight = backGround.get_height()
-    backgroundWidth = backGround.get_width()
+    backGroundWidth = backGround.get_width()
 
     #Pre-requisite for the screen scrolling
     trueScroll = 0 
     tilesHeight = math.ceil(displayHeight / backGroundHeight) + 1
-    tilesWidth = math.ceil(displayWidth / backgroundWidth) + 1
+    tilesWidth = math.ceil(displayWidth / backGroundWidth) + 1
 
     #Import missile model
-    missile = missileA
+    missile = pygame.image.load("img/missile.png")
+    missile = pygame.transform.scale(missile, (missile.get_width(), missile.get_height()))
     missileWidth = missile.get_width()
 
     #Import bullets 
-    classicBullet = classicBulletA
-
-    #Import special shoot
+    classicBullet =  pygame.image.load("img/bullet.png")
+    classicBullet = pygame.transform.scale(classicBullet, (classicBullet.get_width()*2, classicBullet.get_height()*2))
     bigBall = pygame.image.load("img/bigBall.png")
     bigBall = pygame.transform.scale(bigBall, (50, 50))
 
@@ -54,15 +53,14 @@ def play(missileA, classicBulletA, projectileListA, playerA):
     ultimateSound = pygame.mixer.Sound("sound/seismic_charge.mp3")
     ultimateSound.set_volume(0.2)
 
-    #Import Music
+    # Import Music
     bulletHellSound = pygame.mixer.Sound("sound/Bullet_Hell.mp3")
     bulletHellSound.set_volume(0.2)
-
     bossMusic = pygame.mixer.Sound("sound/bossFight.mp3")
     bossMusic.set_volume(0.2)
 
     #projectileList & CD
-    projectileList = projectileListA
+    projectileList = []
     missileCooldown = 0
     bulletCoolDown = 0
     ultimateCooldown = 0
@@ -76,27 +74,28 @@ def play(missileA, classicBulletA, projectileListA, playerA):
     imgPlayer = pygame.image.load("img/player.png")
     imgPlayer = pygame.transform.scale(imgPlayer, (50, 50))
 
-    player = playerA
+    player = Player(10, 5, 50, displayWidth, displayHeight, 30, 60, 15, 5, projectileList, classicBullet, missile)
+
 
 
     #Create Enemy
+    #Load different images
     imgRailgun = pygame.image.load("img/railgun.png")
     imgRailgun = pygame.transform.scale(imgRailgun, (50, 50))
     imgEnemy = pygame.image.load("img/bozo.png")
     imgEnemy = pygame.transform.scale(imgEnemy, (50, 50))
 
     enemyDelayList = [[0, 0, 50], [0, 0, 100], [0, 0, 50], [0, 0, 100], [0, 0, 100], [0, 0, 100]]
-    enemy1 = Enemy(True, 50, 2, 300, 0, 50, displayWidth, displayHeight, 100, imgRailgun, bigBall, 4, 10, 5, projectileList, 1, "left", firstPattern)
-    enemy2 = Enemy(True,50, 2, 1200, 0, 50, displayWidth, displayHeight, 100, imgEnemy, bigBall, 10, 3, 10, projectileList, 1, "left", firstPattern)
-    enemy3 = Enemy(True,50, 2, 500, 0, 50, displayWidth, displayHeight, 100, imgEnemy, bigBall, 10, 3, 10, projectileList, 1, "left", firstPattern)
-    enemy4 = Enemy(True, 50, 1, 500, 0, 50, displayWidth, displayHeight, 100, imgEnemy, classicBullet, 4, 4, 30, projectileList, 1, "left", 0, 10, 1, 0, 2, bigBall, firstPattern)
-    enemy5 = Enemy(False, 50, 0.5, 500, 0, 50, displayWidth, displayHeight, 100, imgEnemy, classicBullet, 1, 4, 90, projectileList, 0.5, "left", 3, 1, 3, 10, 3, bigBall, firstPattern)
+    enemy1 = Enemy(True, 50, 2, 300, 0, 50, displayWidth, displayHeight, 100, imgRailgun, bigBall, 4, 10, 5, projectileList, 1, "left")
+    enemy2 = Enemy(True,50, 2, 1200, 0, 50, displayWidth, displayHeight, 100, imgEnemy, bigBall, 10, 3, 10, projectileList, 1, "left")
+    enemy3 = Enemy(True,50, 2, 500, 0, 50, displayWidth, displayHeight, 100, imgEnemy, bigBall, 10, 3, 10, projectileList, 1, "left")
+    enemy4 = Enemy(True, 50, 1, 500, 0, 50, displayWidth, displayHeight, 100, imgEnemy, classicBullet, 4, 4, 30, projectileList, 1, "left", 0, 10, 1, 0, 2, bigBall)
+    enemy5 = Enemy(False, 50, 0.5, 500, 0, 50, displayWidth, displayHeight, 100, imgEnemy, classicBullet, 1, 4, 90, projectileList, 0.5, "left", 3, 1, 3, 10, 3, bigBall)
     enemy6 = Enemy(False, 50, 0.5, 500, 0, 50, displayWidth, displayHeight, 100, imgEnemy, classicBullet, 1, 4, 90, projectileList, 0.5, "left", 3, 1, 4, 90, 0.5, classicBullet, False, -6)
-
-    enemyList = [enemy1, enemy2, enemy3, enemy4, enemy5, enemy6]
+    enemyList  = [enemy1, enemy2, enemy3, enemy4, enemy5, enemy6]
     onScreenEnemiesList = []
 
-    #Create Boss
+    #create boss
     bossSize = 300
     bossImg = pygame.image.load("img/boss1.png")
     bossImg = pygame.transform.scale(bossImg, (bossSize, bossSize))
@@ -105,25 +104,28 @@ def play(missileA, classicBulletA, projectileListA, playerA):
     bossFight = True
     enemyList.append(boss)
 
-    #Create Button
-    buttonSurface = pygame.image.load("img/button.png")
-    buttonSurface = pygame.transform.scale(buttonSurface, (200, 75))
 
-    button = Button(buttonSurface, 500, 500, "Change weapon price : 30", True, 30, Button.ChangeWeapon, imgEnemy)
-    button2 = Button(buttonSurface, 900, 700, "Do nothing", False, 0, Button.ChangeWeapon, None)
+    # Create Button
+    button_surface = pygame.image.load("img/button.png")
+    button_surface = pygame.transform.scale(button_surface, (200, 75))
+
+    button = Button(button_surface, 500, 500, "Change Weapon price:30", True, 30, Button.ChangeWeapon, imgEnemy)
+    button2 = Button(button_surface, 900, 700, "Do nothing", False, 0, Button.ChangeWeapon, None)
 
     buttonList = [button, button2]
 
-    #Initiate dash coordinates
+    #Initialize dash coordinates
     timerDash = [0 , 0]
 
-    #Initiate score
+    #Initialize score
     score = Score()
 
-    #Import a font
+    # Main Loop
+    running = True
+
+    # Font importe
     font = pygame.font.Font(None, 36)
 
-    #Define rotate function for bullet hitboxes
     def rotate(image, rect, angle):
         """Rotate the image while keeping its center."""
         # Rotate the original image without modifying it.
@@ -131,13 +133,12 @@ def play(missileA, classicBulletA, projectileListA, playerA):
         # Get a new rect with the center of the old rect.
         rect = new_image.get_rect(center=rect.center)
         return new_image, rect
-    pygame.init()
-    running = True
-    
+
     while running:
         # run the game at a constant 60fps
         clock.tick(60)
 
+        
         #Close window on Escape press
         for events in pygame.event.get():
             if events.type == pygame.QUIT:
@@ -150,16 +151,20 @@ def play(missileA, classicBulletA, projectileListA, playerA):
                     button.checkForInput(pygame.mouse.get_pos(), player)
             for button in buttonList:
                 button.changeColor(pygame.mouse.get_pos())
+        # Play music in Loop
         
-        #Play msic in loop
-        if bulletHellSound.get_num_channels() == 0:
-            bulletHellSound.play()
-        '''if bossMusic.get_num_channels() == 0:
-            bossMusic.play()'''
+        '''if bulletHellSound.get_num_channels() == 0:
+            bulletHellSound.play()'''
+        if bossMusic.get_num_channels() == 0:
+            bossMusic.play()
         
+        #draw scrolling background
+        
+        scroll = int(trueScroll)
+
         #screen shake
         if shaking:
-            trueScroll += random.randint(0, screenShake) - screenShake/2
+            scroll += random.randint(0, screenShake) - screenShake/2
 
         for i in range(0, tilesHeight):
             for j in range(0, tilesWidth):
@@ -207,16 +212,15 @@ def play(missileA, classicBulletA, projectileListA, playerA):
         playerHitbox = pygame.Rect(0,0, player.size/8, player.size/8)
         # center the hitbox on the ship's cockpit
         playerRect = pygame.Rect(player.X+player.size/2 - playerHitbox.width/2, player.Y+player.size/2, playerHitbox.width, playerHitbox.height)
-
+        
         #Add enemies at the right time
-        if enemyDelayList != [] and enemyDelayList[0][2] <= 0 and enemyList != []:
+        if enemyDelayList != [] and enemyDelayList[0][2] <= 0 and enemyList  != []:
             onScreenEnemiesList.append(enemyList.pop(0))
             enemyDelayList.pop(0)
 
         for bullet in projectileList:
             if bullet.update(onScreenEnemiesList) == True:
                 projectileList.pop(projectileList.index(bullet))
-            #rotated_image = pygame.transform.rotate(bullet.image, bullet.angle)
             bulletRect = pygame.Rect(bullet.x, bullet.y, bullet.image.get_width(), bullet.image.get_height())
             rotated_image, bulletRect = rotate(bullet.image, bulletRect, bullet.angle)
             screen.blit(rotated_image, (bullet.x, bullet.y))
@@ -226,6 +230,7 @@ def play(missileA, classicBulletA, projectileListA, playerA):
                     player.getHit()
                     projectileList.pop(projectileList.index(bullet))
         
+
         #Enemy
         for enemy in onScreenEnemiesList:
             enemy.update(player)
@@ -243,7 +248,7 @@ def play(missileA, classicBulletA, projectileListA, playerA):
                     boss.move(0,-1)
                 else:
                     enemy.health = 0
-                    enemyList.pop(enemyList.index(enemy))
+                    onScreenEnemiesList.pop(onScreenEnemiesList.index(enemy))
 
             #Collision bullet & enemy
             for bullet in projectileList:
@@ -257,15 +262,17 @@ def play(missileA, classicBulletA, projectileListA, playerA):
                     if(enemy.health <= 0):
                         player.money += 10
                         score.score_increment(enemy.score)
+                        #the enemy pops itself out of onScreenEnemiesList
                         break
             if rect.colliderect(playerRect):
                 player.getHit()
                 if enemy.__class__.__name__ == "Enemy":
                     score.score_increment(10)
-                    enemyList.pop(enemyList.index(enemy))
+                    onScreenEnemiesList.pop(onScreenEnemiesList.index(enemy))
                 else:
                     enemy.health -= 10
-                
+
+
         for particle in particleList:
             if(particle.draw(screen, projectileList)):
                 particleList.pop(particleList.index(particle))
@@ -281,12 +288,12 @@ def play(missileA, classicBulletA, projectileListA, playerA):
         if pressed[pygame.K_w]:
             if player.cooldown <= 0:
                 player.shoot()
+                if player.speed != player.slowSpeed:
+                    if player.missileCooldown <= 0:
+                        player.shootHoming()
+                        player.missileCooldown = player.timeBetweenMissiles
                 player.cooldown = player.timeBetweenShots
         if pressed[pygame.K_x]:
-            if player.missileCooldown <= 0:
-                player.shootHoming()
-                player.missileCooldown = player.timeBetweenMissiles
-        if pressed[pygame.K_c]:
             if player.ultimateCooldown <= 0:
                 #play sfx
                 ultimateSound.play()
@@ -308,15 +315,16 @@ def play(missileA, classicBulletA, projectileListA, playerA):
         #Draw player model on screen
         screen.blit(imgPlayer, (player.X, player.Y))
         
-        #Write player's score & remaining lives
+        #Write player's score & remaining lives 
         scoreText = font.render(f'Score: {score.score}', True, (255, 255, 255))
         screen.blit(scoreText, (10, 10))
         livesText = font.render(f'Lives: {player.lives}', True, (255, 255, 255))
         screen.blit(livesText, (10, 30))
         ultimateText = font.render(f'Ultimate in: {math.ceil(player.ultimateCooldown/60)}', True, (255, 255, 255))
         screen.blit(ultimateText, (10, 50))
-        moneyText = font.render(f'Money: {player.money}', True, (255, 255, 255))
-        screen.blit(moneyText, (10, 70))
+        ultimateText = font.render(f'Money: {player.money}', True, (255, 255, 255))
+        screen.blit(ultimateText, (10, 70))
+
         bossHPText = font.render(f'Boss HP: {boss.health}', True, (255, 255, 255))
         screen.blit(bossHPText, (10, 100))
 
@@ -324,6 +332,8 @@ def play(missileA, classicBulletA, projectileListA, playerA):
             screen.blit(button.image, button.rect)
             screen.blit(button.text, button.text_rect)
         
+        if pressed[pygame.K_LSHIFT]:
+            pygame.draw.rect(screen, (0,255,0), playerRect)
+
         pygame.display.update()
-    bulletHellSound.stop()
-    
+    bossMusic.stop()

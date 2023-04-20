@@ -30,7 +30,7 @@ projectileList = []
 imgPlayer = pygame.image.load("img/player.png")
 imgPlayer = pygame.transform.scale(imgPlayer, (50, 50))
 
-player = Player(10, 5, 50, 1080, 1920, 30, 60, 15, 5, projectileList, classicBullet, missile)
+player = Player(10, 5, 50, 1920, 1080, 30, 60, 15, 5, projectileList, classicBullet, missile)
 
 SCREEN = pygame.display.set_mode((1920, 1080))
 pygame.display.set_caption("Menu")
@@ -73,5 +73,5 @@ def main_menu():
                 if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS, player):
                     running = False
         pygame.display.update()
-
+        
 main_menu()

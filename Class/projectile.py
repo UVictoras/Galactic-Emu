@@ -1,32 +1,28 @@
 import pygame
 import math
 import pygame
-
 class Projectile():
     def __init__(self, x, y, size, image, velocity, damage, isHoming, displayWidth, displayHeight, speed, player=False):
+
         self.isPlayer = player
         self.x = x
         self.y = y
+        self.speed = speed
         self.velocity = velocity
+
         self.damage = damage
+        self.isHoming = isHoming
 
         self.size = size
         self.image = image
         self.angle = 0
         self.displayWidth = displayWidth
         self.displayHeight = displayHeight
-
-        self.isHoming = isHoming
-        self.speed = speed
-        self.rotationSpeed = 10
-
-        self.pos = pygame.math.Vector2(self.x, self.y)
         
         
     def update(self, enemyList):
-        self.enemyList = enemyList
         if(self.isHoming):
-            self.chase()
+            self.chase(enemyList)
         else:
             self.x += self.velocity[0] * self.speed
             self.y += self.velocity[1] * self.speed
@@ -51,11 +47,11 @@ class Projectile():
             del(self)
             return True
 
-    def chase(self):
+    def chase(self, enemyList):
         if(self.isPlayer):
             distance = 10000
-            target = pygame.Vector2(self.x, -1000)
-            for enemy in self.enemyList:
+            target = pygame.Vector2(self.x + self.velocity[0], self.y + self.velocity[1])
+            for enemy in enemyList:
                 if distance > pygame.math.Vector2.distance_to(pygame.math.Vector2(enemy.x, enemy.y), pygame.math.Vector2(self.x, self.y)):
                     distance = pygame.math.Vector2.distance_to(pygame.math.Vector2(enemy.x, enemy.y), pygame.math.Vector2(self.x, self.y))
                     target = pygame.Vector2(enemy.x + enemy.size/2, enemy.y + enemy.size/2)
@@ -70,15 +66,8 @@ class Projectile():
             angle_radians = math.atan2(dx, dy)
             angle_degrees = math.degrees(angle_radians)
             # Faire pivoter l'image du missile de l'angle calculé
-            self.angle = angle_degrees + 180
+            self.angle = angle_degrees +180
             # rotated_image = pygame.transform.rotate(self.image, -angle_degrees - 90)
-
+            
         else:
             pass
-
-    def rotateToTarget(self, target):
-        targetPos = pygame.math.Vector2(target.x, target.y)
-        
-        direction = (targetPos - self.pos)
-        angleTo = self.pos.angle_to(targetPos)
-        self.pos.rotate(angleTo * min(self.rotationSpeed, abs(angleTo)))

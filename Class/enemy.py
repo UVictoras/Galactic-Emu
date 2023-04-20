@@ -27,23 +27,27 @@ class Enemy():
         self.bulletImg1 = bulletImg1
         self.BHList = []
         
+        self.bulletRotation = bulletRotation
+        self.bulletRotation2 = bulletRotation2
             
-        self.bulletHandler = BulletHandler(bulletSpeed, arrayNumber, angleBetweenArrays, projectileList, self.bulletImg1)
+        self.bulletHandler = BulletHandler(bulletSpeed, arrayNumber, angleBetweenArrays, projectileList, self.bulletImg1, self.bulletRotation)
         self.BHList.append(self.bulletHandler)
         
         if bulletSpeed2 != 0:
             self.anotherBH = True
-            self.bulletHandler2 = BulletHandler(bulletSpeed2, arrayNumber2, angleBetweenArrays2, projectileList, bulletImg2)
+            self.bulletHandler2 = BulletHandler(bulletSpeed2, arrayNumber2, angleBetweenArrays2, projectileList, bulletImg2, self.bulletRotation2)
             self.bulletHandler2.move(self.x, self.y)
             self.BHList.append(self.bulletHandler2)
+            
         for bulletHandler in self.BHList:
-            bulletHandler.move(self.x + self.size/2, self.y + self.size/2)
+            bulletHandler.move(self.x, self.y)
+        
         
     def move(self, veloX, veloY):
         self.x = self.x + veloX * self.speed
         self.y = self.y + veloY * self.speed
-        for bulletHandler in self.BHList:
-            bulletHandler.move(self.x, self.y)
+        for bulletHandler in self.BHList:   
+            bulletHandler.move(self.x + self.size/2, self.y + self.size/2)
 
     def takeDmg(self, dmg, enemyList):
         self.health -= dmg
