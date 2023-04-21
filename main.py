@@ -41,8 +41,6 @@ projectileList = []
 imgPlayer = pygame.image.load("img/ships/player.png")
 imgPlayer = pygame.transform.scale(imgPlayer, (50, 50))
 
-player = Player(10, 5, 50, 1920, 1080, 30, 60, 15, 5, projectileList, classicBullet, missile, carreauBlue)
-
 SCREEN = pygame.display.set_mode((1920, 1080))
 pygame.display.set_caption("Menu")  
 
@@ -58,6 +56,8 @@ menuMusic = pygame.mixer.Sound("sound/menu_music.ogg")
 menuMusic.set_volume(0.2 * gameManager.sound)
 
 def main_menu():
+    player = Player(10, 5, 50, 1920, 1080, 30, 60, 15, 5, projectileList, classicBullet, missile, carreauBlue)
+    earntMoney = 0
     running = True
     while running:
         if menuMusic.get_num_channels() == 0:
@@ -89,7 +89,7 @@ def main_menu():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS, player):
                     menuMusic.stop()
-                    play(gameManager)
+                    earntMoney = play(player, gameManager)
                 if SHOP_BUTTON.checkForInput(MENU_MOUSE_POS, player):
                     shop(SCREEN, BG, player, main_menu, gameManager)
                 if OPTIONS_BUTTON.checkForInput(MENU_MOUSE_POS, player):
@@ -103,5 +103,6 @@ def main_menu():
                     pygame.quit()
                     sys.exit()
         pygame.display.update()
+        player.money = earntMoney
         
 main_menu()
