@@ -201,7 +201,7 @@ def play(gameManager):
     button_surface = pygame.image.load("img/assets/button.png").convert_alpha()
     button_surface = pygame.transform.scale(button_surface, (200, 75))
 
-    button = Button(button_surface, 500, 500, "Change Weapon price:30", True, 30, Button.ChangeWeapon, imgEnemy)
+    button = Button(button_surface, 500, 500, "Change Weapon price:30", True, 30, Button.ChangeWeapon, imgBozo)
     button2 = Button(button_surface, 900, 700, "Do nothing", False, 0, Button.ChangeWeapon, None)
 
     buttonList = [button, button2]
