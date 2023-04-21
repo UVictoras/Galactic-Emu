@@ -29,14 +29,14 @@ class Button():
 
 	def checkForInput(self, position, player):
 		if position[0] in range(self.rect.left, self.rect.right) and position[1] in range(self.rect.top, self.rect.bottom):
-			if self.isShopping and self.price <= player.money:
-				player.money -= self.price
-				self.function(player, self.newImg)
-			return True
-		return False
-			# img = pygame.image.load("img/emeu.jpg")
-			# img = pygame.transform.scale(img, (50, 50))
-			# player.bulletHandler.img = img
+			# If you have the money to buy return True
+			if self.isShopping and (self.price <= player.money or self.price == None):
+				player.updateMoney(-self.price)
+				# self.function(player, self.newImg)
+				return True
+			# If the Button don't need money return True
+			elif not(self.isShopping):
+				return True
 
 	def changeColor(self, position, screen):
 		if position[0] in range(self.rect.left, self.rect.right) and position[1] in range(self.rect.top, self.rect.bottom):
