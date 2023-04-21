@@ -521,3 +521,4 @@ def play(statsPlayer, gameManager):
 
         pygame.display.update()
     bossMusic.stop()
+    bulletHellSound.stop()
