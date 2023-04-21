@@ -35,15 +35,22 @@ def play(gameManager):
     # Create Window
     displayHeight = 1080
     displayWidth = 1920
-    backgroundColor = (200,200,200)
     screen = pygame.display.set_mode((displayWidth, displayHeight))
     pygame.display.set_caption("Bullet Hell")
 
     #Import background model
-    backGround = pygame.image.load("img/assets/back.png").convert()
-    backGround = pygame.transform.scale(backGround, (1920, 1080))
-    backGroundHeight = backGround.get_height()
-    backGroundWidth = backGround.get_width()
+    levelBackGround = pygame.image.load("img/assets/back.png").convert()
+    levelBackGround = pygame.transform.scale(levelBackGround, (1920, 1080))
+    backGroundHeight = levelBackGround.get_height()
+    backGroundWidth = levelBackGround.get_width()
+
+    #Import boss' base asset
+    bossBase = pygame.image.load("img/assets/base-bg.png").convert()
+    bossBase = pygame.transform.scale(bossBase, (2140, 2140))
+    bossBaseCoordinates = pygame.Vector2(0,0)
+    bossBaseFacing = "right"
+
+    backGround = levelBackGround
 
     #Pre-requisite for the screen scrolling
     trueScroll = 0 
@@ -195,7 +202,7 @@ def play(gameManager):
     bossImg = pygame.transform.scale(bossImg, (bossSize, bossSize))
     boss = Boss(10000, 1, 0, 0, bossSize, 1920, 1080, 1000, bossImg, projectileList, "Left")
     #onScreenEnemiesList.append(boss)
-    bossFight = True
+    bossFight = False
 
     # Create Button
     button_surface = pygame.image.load("img/assets/button.png").convert_alpha()
@@ -233,22 +240,52 @@ def play(gameManager):
                     running=False
         # Play music in Loop
         
-        '''if bulletHellSound.get_num_channels() == 0:
-            bulletHellSound.play()'''
-        if bossMusic.get_num_channels() == 0:
-            bossMusic.play()
+        if bossFight:
+            bulletHellSound.stop()
+            if bossMusic.get_num_channels() == 0:
+                bossMusic.play()
+        else:
+            if bulletHellSound.get_num_channels() == 0:
+                bulletHellSound.play()
         
-        #draw scrolling background
-        
+        #draw scrolling background       
         scroll = int(trueScroll)
 
         #screen shake
         if shaking:
             scroll += random.randint(0, screenShake) - screenShake/2
 
+        if bossFight:
+            transition = True
+            backGround = bossBase
+        else:
+            backGround = levelBackGround
+
         for i in range(0, tilesHeight):
             for j in range(0, tilesWidth):
                 screen.blit(backGround, (j*backGround.get_width(), i*backGround.get_height() - trueScroll))
+
+        if bossFight:
+            screen.blit(bossBase, bossBaseCoordinates)
+            if bossBaseCoordinates.x < -3*bossBase.get_width()/4:
+                bossBaseFacing = "right"
+            elif bossBaseCoordinates.x > displayWidth - bossBase.get_width()/4:
+                bossBaseFacing = "left"
+
+            if bossBaseFacing == "right":
+                bossBaseCoordinates.x += 1
+            else:
+                bossBaseCoordinates.x -= 1
+
+            if bossBaseCoordinates.y < -3*bossBase.get_height()/4:
+                bossBaseFacing = "down"
+            elif bossBaseCoordinates.y > displayHeight - bossBase.get_height()/4:
+                bossBaseFacing = "up"
+
+            if bossBaseFacing == "down":
+                bossBaseCoordinates.y += 1
+            else:
+                bossBaseCoordinates.y -= 1
         
         trueScroll += 1
         # reset scroll
@@ -304,6 +341,8 @@ def play(gameManager):
         
         #Add enemies at the right time
         if enemyDelayList != [] and enemyDelayList[0][2] <= 0 and enemyList  != []:
+            if enemyList[0] == boss:
+                bossFight = True
             onScreenEnemiesList.append(enemyList.pop(0))
             enemyDelayList.pop(0)
 
@@ -351,10 +390,10 @@ def play(gameManager):
                 if bullet.isPlayer == True:
                     bulletRect = pygame.Rect(bullet.x, bullet.y, bullet.size, bullet.size)
                     if enemyRect.colliderect(bulletRect):
+                        projectileList.pop(projectileList.index(bullet))
                         enemy.takeDmg(bullet.damage, onScreenEnemiesList)
                         score.score_increment(10)
-                        projectileList.pop(projectileList.index(bullet))
-
+                        
                     if(enemy.health <= 0):
                         player.money += 10
                         score.score_increment(enemy.score)
@@ -370,6 +409,7 @@ def play(gameManager):
                     onScreenEnemiesList.pop(onScreenEnemiesList.index(enemy))
                 else:
                     enemy.health -= 10
+            enemy.update(player)
 
 
         for particle in particleList:
