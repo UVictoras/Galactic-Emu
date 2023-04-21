@@ -93,11 +93,11 @@ def main_menu():
                 if SHOP_BUTTON.checkForInput(MENU_MOUSE_POS, player):
                     shop(SCREEN, BG, player, main_menu, gameManager)
                 if OPTIONS_BUTTON.checkForInput(MENU_MOUSE_POS, player):
-                    gameOptions(SCREEN, BG, player, main_menu)
+                    gameOptions(SCREEN, BG, player, main_menu, gameManager)
                 if HOW_TO_PLAY_BUTTON.checkForInput(MENU_MOUSE_POS, player):
                     howToPlay(SCREEN, BG, player, main_menu)
                 if CREDITS_BUTTON.checkForInput(MENU_MOUSE_POS, player):
-                    credits(SCREEN, BG, player, main_menu, gameManager)
+                    credits(SCREEN, BG, player, main_menu)
                 if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS, player):
                     running = False
                     pygame.quit()

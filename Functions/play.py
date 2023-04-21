@@ -11,6 +11,12 @@ from Class.button import Button
 from Class.boss import Boss
 
 from Functions.enemiesPattern import *
+from Functions.transition import *
+
+def drawTransition(surf, y, color):
+    for x in range(16):
+        pygame.draw.rect(surf, color, (x, 16 - y, 1, y))
+        y -= 1
 
 def darken(image, percent = 50):
     '''Creates a  darkened copy of an image, darkened by percent (50% by default)'''
@@ -23,10 +29,10 @@ def darken(image, percent = 50):
 def rotate(image, rect, angle):
         """Rotate the image while keeping its center."""
         # Rotate the original image without modifying it.
-        new_image = pygame.transform.rotate(image, angle)
+        newImage = pygame.transform.rotate(image, angle)
         # Get a new rect with the center of the old rect.
-        rect = new_image.get_rect(center=rect.center)
-        return new_image, rect
+        rect = newImage.get_rect(center=rect.center)
+        return newImage, rect
 
 def play(statsPlayer, gameManager):
     pygame.init()
@@ -51,6 +57,13 @@ def play(statsPlayer, gameManager):
     bossBaseFacing = "right"
 
     backGround = levelBackGround
+
+    #Transitions variables
+    transition = False
+    transitionY = 0
+    subY = 0
+    transitionSurf = pygame.Surface((16,9))
+    transitionSurf.set_colorkey((0,0,0))
 
     #Pre-requisite for the screen scrolling
     trueScroll = 0 
@@ -241,10 +254,13 @@ def play(statsPlayer, gameManager):
         # Play music in Loop
         
         if bossFight:
+            transition = True
+            backGround = bossBase
             bulletHellSound.stop()
             if bossMusic.get_num_channels() == 0:
                 bossMusic.play()
         else:
+            backGround = levelBackGround
             if bulletHellSound.get_num_channels() == 0:
                 bulletHellSound.play()
         
@@ -254,13 +270,7 @@ def play(statsPlayer, gameManager):
         #screen shake
         if shaking:
             scroll += random.randint(0, screenShake) - screenShake/2
-
-        if bossFight:
-            transition = True
-            backGround = bossBase
-        else:
-            backGround = levelBackGround
-
+            
         for i in range(0, tilesHeight):
             for j in range(0, tilesWidth):
                 screen.blit(backGround, (j*backGround.get_width(), i*backGround.get_height() - trueScroll))
@@ -494,6 +504,20 @@ def play(statsPlayer, gameManager):
 
         if pressed[pygame.K_LSHIFT]:
             pygame.draw.rect(screen, (0,255,0), playerRect)
+
+        #Transition
+        if transition:
+            if transitionY <= 32:
+                drawTransition(transitionSurf, transitionY, (255,255,255))
+                new = pygame.transform.scale(transitionSurf, (displayWidth, displayHeight))
+                screen.blit(new, (0,0))
+                transitionY += 1/6
+        elif transitionY > 32:
+            if subY <= 32:
+                drawTransition(transitionSurf, subY, (0,0,0))
+                new = pygame.transform.scale(transitionSurf, (displayWidth, displayHeight))
+                screen.blit(new, (0,0))
+                subY += 1/6
 
         pygame.display.update()
     bossMusic.stop()
