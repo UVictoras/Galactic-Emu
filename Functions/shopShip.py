@@ -3,7 +3,7 @@ import sys
 
 from Class.button import Button
 
-buttonSurface = pygame.image.load("img/assets/button.png")
+buttonSurface = pygame.image.load("img/UI/button.png")
 buttonSurface = pygame.transform.scale(buttonSurface, (buttonSurface.get_width()/1.3, buttonSurface.get_height()/1.3))
 
 RESUME_BUTTON = Button(buttonSurface, 960, 850, "Return", False, None, None, buttonSurface)
@@ -21,7 +21,7 @@ CANONS_BUTTON = Button(buttonSurface, 1160, 700, "Canons", False, None, None, bu
 FIRERATE_BUTTON = Button(buttonSurface, 1410, 700, "Firerate", False, None, None, buttonSurface, "Increase the speed when normal movement and decrease it when slow movement")
 
 def get_font(size): # Returns Press-Start-2P in the desired size
-    return pygame.font.Font("font.ttf", size)
+    return pygame.font.Font("asset/font.ttf", size)
 
 MENU_TEXT = get_font(100).render("SHIP SHOP", True, "#b68f40")
 MENU_TEXT_RECT = MENU_TEXT.get_rect(center=(960, 100))

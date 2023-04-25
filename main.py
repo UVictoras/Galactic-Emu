@@ -2,10 +2,12 @@
 import pygame, sys
 import pygame.time
 
+sys.path.append("/Projet-Mini-Studio")
 #Import Classes
 from Class.player import Player
 from Class.button import Button
 from Class.gameManager import GameManager
+from Functions.jsonReader import *
 
 #Import Patterns
 from Functions.enemiesPattern import *
@@ -14,14 +16,17 @@ from Functions.shop import shop
 from Functions.play import *
 from Functions.credits import credits
 from Functions.howToPlay import howToPlay
+from Functions.saveReader import saveReader
+from Functions.darken import darken
+from SaveFiles.templatePaste import templatePaste
 
-pygame.init()
+pygame.init()  
 
 # Logo windows
 icon = pygame.image.load("img/emeu.jpg")
 pygame.display.set_icon(icon)
 
-buttonSurface = pygame.image.load("img/assets/button.png")
+buttonSurface = pygame.image.load("img/UI/button.png")
 buttonSurface = pygame.transform.scale(buttonSurface, (buttonSurface.get_width()/1.3, buttonSurface.get_height()/1.3))
 
 #Import missile model
@@ -32,8 +37,11 @@ missileWidth = missile.get_width()
 #Import bullets 
 classicBullet =  pygame.image.load("img/bullets/bullet.png")
 classicBullet = pygame.transform.scale(classicBullet, (classicBullet.get_width()*2, classicBullet.get_height()*2))
+
+# Import Carreau modele
 carreauBlue =  pygame.image.load("img/bullets/carreau.png")
 carreauBlue = pygame.transform.scale(carreauBlue, (carreauBlue.get_width()*2, carreauBlue.get_height()*2))
+
 
 #projectileList & CD
 projectileList = []
@@ -41,28 +49,82 @@ projectileList = []
 imgPlayer = pygame.image.load("img/ships/player.png")
 imgPlayer = pygame.transform.scale(imgPlayer, (50, 50))
 
+imgEmeu = pygame.image.load("img/avatar/heros-comesback.png")
+# imgEmeu = pygame.transform.scale(imgEmeu, (50, 50))
+imgColonel = pygame.image.load("img/avatar/colonel.png")
+# imgColonel = pygame.transform.scale(imgColonel, (50, 50))
+
 SCREEN = pygame.display.set_mode((1920, 1080))
 pygame.display.set_caption("Menu")  
 
-BG = pygame.image.load("img/assets/background.png")
+BG = pygame.image.load("img/bgs/background.png")
 BG = pygame.transform.scale(BG, (1920, 1080))
-
-def get_font(size): # Returns Press-Start-2P in the desired size
-    return pygame.font.Font("font.ttf", size)
 
 gameManager = GameManager()
 
 menuMusic = pygame.mixer.Sound("sound/menu_music.ogg")
 menuMusic.set_volume(0.2 * gameManager.sound)
 
-def main_menu():
-    player = Player(10, 5, 50, 1920, 1080, 30, 60, 15, 5, projectileList, classicBullet, missile, carreauBlue)
-    earntMoney = 0
+darkCarreau = darken(carreauBlue,45).convert_alpha()
+darkBullet = darken(classicBullet).convert_alpha()
+darkMissile = darken(missile,60).convert_alpha()
+
+player = Player(10, 5, 50, 1920, 1080, 30, 120, 15, 5, projectileList, darkBullet, darkMissile, darkCarreau)
+
+textEpilepsy = "Warning\n\nThis game has been identified \nby epilepsy action\nto potentially trigger seizure for people with\n photosensitive epilepsy."
+textEpilepsySurface = []
+textEpilepsyRect = []
+for line in textEpilepsy.split('\n'):
+    textEpilepsySurface.append(get_font(20).render(line, True, "#b68f40"))
+
+# Take the save from the save.json
+saveReader(player)
+
+def get_font(size): # Returns Press-Start-2P in the desired size
+    return pygame.font.Font("asset/font.ttf", size)
+
+def main_menu(alert=True):
+    isPaused = True
+    if alert:
+        if isPaused:
+
+            pausedRect = pygame.Surface((1920,1080)) 
+            pausedRect.set_alpha(128)               
+            pausedRect.fill((0,0,0))           
+            SCREEN.blit(pausedRect, (0,0))
+            # La position de la première ligne de texte
+            x = 960
+            y = 300
+
+            # Blit chaque surface de texte sur l'écran à des positions différentes
+
+            for text in textEpilepsySurface:
+
+                SCREEN.blit(text, text.get_rect(center=(x, y)))
+                y += text.get_height()
+
+            epilepsyWarningText = get_font(90).render("EPILEPSY WARNING !!!", True, "#b68f40")
+            epilepsyRect = epilepsyWarningText.get_rect(center=(960, 100))
+            SCREEN.blit(epilepsyWarningText,epilepsyRect)
+            spaceText = get_font(20).render("press any key", True, "#b68f40")
+            spaceRect = spaceText.get_rect(center=(960, 950))
+            SCREEN.blit(spaceText,spaceRect)
+
+            while True:
+                event = pygame.event.poll()
+
+                if event.type == pygame.KEYDOWN:
+                    isPaused = False
+                    break
+
+                pygame.display.flip()
     running = True
     while running:
         if menuMusic.get_num_channels() == 0:
-            menuMusic.play(-1)
+            menuMusic.play(-1)  
         SCREEN.blit(BG, (0, 0))
+        SCREEN.blit(imgEmeu, (-100,300))
+        SCREEN.blit(imgColonel, (1000,300))
 
         MENU_MOUSE_POS = pygame.mouse.get_pos()
 
@@ -89,11 +151,11 @@ def main_menu():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS, player):
                     menuMusic.stop()
-                    earntMoney = play(player, gameManager)
+                    play(player, gameManager)
                 if SHOP_BUTTON.checkForInput(MENU_MOUSE_POS, player):
                     shop(SCREEN, BG, player, main_menu, gameManager)
                 if OPTIONS_BUTTON.checkForInput(MENU_MOUSE_POS, player):
-                    gameOptions(SCREEN, BG, player, main_menu, gameManager)
+                    gameOptions(SCREEN, BG, player, main_menu, gameManager, menuMusic)
                 if HOW_TO_PLAY_BUTTON.checkForInput(MENU_MOUSE_POS, player):
                     howToPlay(SCREEN, BG, player, main_menu)
                 if CREDITS_BUTTON.checkForInput(MENU_MOUSE_POS, player):
@@ -103,6 +165,4 @@ def main_menu():
                     pygame.quit()
                     sys.exit()
         pygame.display.update()
-        player.money = earntMoney
-        
 main_menu()
