@@ -210,7 +210,7 @@ def play(player, gameManager):
     imgMiniBoss = pygame.transform.scale(imgMiniBoss, (100,100))
 
     #Create Enemy
-    enemyDelayList = [[0, 0, 50], [0, 0, 100], [0, 0, 50], [0, 0, 100], [0, 0, 100], [0, 0, 100], [0, 0, 100], [0, 0, 0]]
+    enemyDelayList = [[0, 0, 50], [0, 0, 0], [0, 0, 50], [0, 0, 100], [0, 0, 100], [0, 0, 100], [0, 0, 100], [0, 0, 0]]
     bozo = Enemy(True, 100, 2, 1200, 0, 50, displayWidth, displayHeight, 100, imgBozo, bulletRed, 10, 1, 0, projectileList, 1, "left")
     railgun = Enemy(True, 300, 0.5, 300, 0, 50, displayWidth, displayHeight, 100, imgRailgun, bigBallYellow, 3, 5, 10, projectileList, 3, "left")
     supressor = Enemy(True, 150, 1, 500, 0, 50, displayWidth, displayHeight, 100, imgSupressor, bulletYellow, 4, 4, 30, projectileList, 1, "left", 0, 10, 1, 0, 2, bigBallRed)
@@ -406,6 +406,7 @@ def play(player, gameManager):
                         onScreenEnemiesList.append(enemyList.pop(0))
                         enemyDelayList.pop(0)
             else:
+                enemyList[0].x, enemyList[0].y = enemyDelayList[0][0], enemyDelayList[0][1]
                 onScreenEnemiesList.append(enemyList.pop(0))
                 enemyDelayList.pop(0)
 
