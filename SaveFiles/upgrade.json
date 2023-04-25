@@ -111,7 +111,7 @@
         500,
         -1
     ],
-    "playerLiveLevel": 0,
+    "playerLiveLevel": 4,
     "playerLiveUpgrade": [
         6,
         7,
@@ -125,7 +125,7 @@
         500,
         -1
     ],
-    "playerSpeedLevel": 0,
+    "playerSpeedLevel": 4,
     "playerSpeedUpgrade": [
         11,
         12,
@@ -139,7 +139,7 @@
         500,
         -1
     ],
-    "playerDashLevel": 0,
+    "playerDashLevel": 4,
     "playerDashUpgrade": [
         105,
         90,
@@ -153,7 +153,7 @@
         700,
         -1
     ],
-    "playerShieldLevel": 0,
+    "playerShieldLevel": 4,
     "playerShieldUpgrade": [
         5,
         10,

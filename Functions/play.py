@@ -10,7 +10,7 @@ from Class.enemy import Enemy
 from Class.score import Score
 from Class.button import Button
 from Class.boss import Boss
-from Functions.saveReader import saveReader
+from Functions.saveReader import *
 
 
 from Functions.enemiesPattern import *
@@ -40,6 +40,20 @@ def rotate(image, rect, angle):
 
 def get_font(size): # Returns Press-Start-2P in the desired size
     return pygame.font.Font("asset/font.ttf", size)
+
+def createEnemy(data, bulletRotation=0, bulletSpeed2=0, arrayNumber2=0,angleBetweenArrays2=0,timeBetweenShots2=0,bulletImg2=[],aimAtPlayer2=False,bulletRotation2=0,pattern = firstPattern):
+    '''money = data[15]
+    bulletRotation = data[16]
+    bulletSpeed2 = data[17]
+    arrayNumber2 = data[18]
+    angleBetweenArrays2 = data[19]
+    timeBetweenShots2 = data[20]
+    bulletImg2 = data[21]
+    aimAtPlayer2 = data[22]
+    bulletRotation2 = data[23]
+    pattern = data[24]'''
+    newEnemy = Enemy(data[0],data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9], data[10], data[11], data[12], data[13], data[14], data[15], data[16], data[17], bulletRotation, bulletSpeed2, arrayNumber2, angleBetweenArrays2, timeBetweenShots2, bulletImg2, aimAtPlayer2, bulletRotation2, pattern)
+    return newEnemy
 
 def play(player, gameManager):
     pygame.init()
@@ -202,6 +216,8 @@ def play(player, gameManager):
     imgRailgun = pygame.transform.scale(imgRailgun, (50, 50))
     imgBozo = pygame.image.load("img/ships/bozo.png").convert_alpha()
     imgBozo = pygame.transform.scale(imgBozo, (50, 50))
+    imgMiniBozo = pygame.image.load("img/ships/bozo.png").convert_alpha()
+    imgMiniBozo = pygame.transform.scale(imgBozo, (25, 25))
     imgSupressor = pygame.image.load("img/ships/supressor.png").convert_alpha()
     imgSupressor = pygame.transform.scale(imgSupressor, (50,50))
     imgSpyral = pygame.image.load("img/ships/spyral.png").convert_alpha()
@@ -210,16 +226,17 @@ def play(player, gameManager):
     imgMiniBoss = pygame.transform.scale(imgMiniBoss, (100,100))
 
     #Create Enemy
-    enemyDelayList = [[0, 0, 50], [0, 0, 0], [0, 0, 50], [0, 0, 100], [0, 0, 100], [0, 0, 100], [0, 0, 100], [0, 0, 0]]
-    bozo = Enemy(True, 100, 2, 1200, 0, 50, displayWidth, displayHeight, 100, imgBozo, bulletRed, 10, 1, 0, projectileList, 1, "left")
-    railgun = Enemy(True, 300, 0.5, 300, 0, 50, displayWidth, displayHeight, 100, imgRailgun, bigBallYellow, 3, 5, 10, projectileList, 3, "left")
-    supressor = Enemy(True, 150, 1, 500, 0, 50, displayWidth, displayHeight, 100, imgSupressor, bulletYellow, 4, 4, 30, projectileList, 1, "left", 0, 10, 1, 0, 2, bigBallRed)
-    spyral = Enemy(False, 150, 0.5, 500, 0, 50, displayWidth, displayHeight, 100, imgSpyral, carreauGreen, 1, 4, 30, projectileList, 1.5, "left", 3)
-    miniboss = Enemy(False, 500, 0.5, 500, 0, 50, displayWidth, displayHeight, 100, imgMiniBoss, bulletGreen, 1, 4, 90, projectileList, 0.5, "left", 3, 1, 3, 10, 3, ballYellow)
-    enemyList  = [bozo, railgun, supressor, spyral, miniboss ]
+    "[aimAtEnemy, HP, speed, x, y, size, displayWidth, displayHeight, score, image, bulletImg, bulletSpeed, arrayNumber, angleBetweenArrays, projectileList, timeBetweenShots, facing, ||optionals from now|| money, bulletRotation, bulletSpeed2, arrayNumber2, angleBetweenArrays2, timeBetweenShots2, bulletImg2, aimAtPlayer2, bulletRotation2, pattern"
+    miniBozo = [True, 10, 0.5, 1200, 0, 50, displayWidth, displayHeight, 100, imgMiniBozo, bulletRed, 10, 1, 0, projectileList, 3, "left", 10]
+    bozo = [True, 100, 2, 1200, 0, 50, displayWidth, displayHeight, 100, imgBozo, bulletRed, 10, 1, 0, projectileList, 1, "left", 20]
+    railgun = [True, 300, 0.5, 300, 0, 50, displayWidth, displayHeight, 100, imgRailgun, bigBallYellow, 3, 5, 10, projectileList, 3, "left", 50]
+    supressor = [True, 150, 1, 500, 0, 50, displayWidth, displayHeight, 100, imgSupressor, bulletYellow, 4, 4, 30, projectileList, 1, "left",30, 0, 10, 1, 0, 2, bigBallRed]
+    spyral = [False, 150, 0.5, 500, 0, 50, displayWidth, displayHeight, 100, imgSpyral, carreauGreen, 1, 4, 30, projectileList, 1.5, "left",30, 3]
+    miniboss = [False, 500, 0.5, 500, 0, 50, displayWidth, displayHeight, 100, imgMiniBoss, bulletGreen, 1, 4, 90, projectileList, 0.5, "left",150, 3, 1, 3, 10, 3, ballYellow]
+    enemyDelayList = [[10, 300, 1], [1870,300,0],[10,300,60],[1870,300,0],[10,300,60],[1870,300,0], [displayWidth/4, 1, 160],[3*displayWidth/4, 1, 0], [0,0,0]]
+    enemyList  = [createEnemy(miniBozo), createEnemy(miniBozo), createEnemy(miniBozo),createEnemy(miniBozo), createEnemy(miniBozo), createEnemy(miniBozo), createEnemy(bozo), createEnemy(bozo)]
     # enemyList = []
     onScreenEnemiesList = []
-
     #create boss
     bossSize = 300
     bossImg = pygame.image.load("img/ships/boss1.png").convert_alpha()
@@ -251,11 +268,11 @@ def play(player, gameManager):
     font = pygame.font.Font(None, 36)
     
     # Dialogue phase 1
-    textDialogueBossPhase = "Hello mister \nYou're beautiful, I think I love you\nSo I need to beat you to take you\n"
+    textDialogueBossPhase = "Here I come, Death Bucket \nCOLONEL SANDERERS!\nYOU TOOK EVERYTHING FROM ME!!!\nYou will be fried with this base!\n"
     textDialoguePhase = 0
     textDialoguePhaseBoss = 0
-    textDialogue = "Hello,\nI am under the water\nPlease help me\n"
-    textDialogueBoss = "\nHello \nSorry lady, I have to many other women\nTry it\n"
+    textDialogue = "\nGotta find the Australian base... \n...and destroy it.\n"
+    textDialogueBoss = "\nStop right there, Criminal Scum! \nYOU STOLE THE SECRET RECIP- uh, PLANS!\nI don't even know who you are\nTry me, little bird\n"
     textDialogueSurface = []
     textDialogueSurfaceBoss = []
     space_pressed = False
@@ -267,7 +284,38 @@ def play(player, gameManager):
         textDialogueSurfaceBoss.append(get_font(20).render(line, True, "#b68f40"))
 
     isPaused = False
+    isDead = False
 
+    
+    cap = cv2.VideoCapture("video/galactic_emu_intro_pixel.mp4")
+
+    while True:
+        clock.tick(30)
+        event = pygame.event.poll()
+        # Lit une image de la vidéo avec OpenCV
+        ret, frame = cap.read()
+        
+        # Si la lecture est terminée, sort de la boucle
+        if not ret:
+            cap.release()
+            break
+        
+        # Convertit l'image OpenCV en surface Pygame
+        frame = cv2.flip(frame, 90)
+        frame = cv2.rotate(frame, cv2.ROTATE_90_COUNTERCLOCKWISE)
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        frame = cv2.resize(frame, (1080, 1920))
+        frame = pygame.surfarray.make_surface(frame)
+        
+        # Affiche la surface sur l'écran Pygame
+        screen.blit(frame, (0, 0))
+        pygame.display.flip()
+        
+        # Vérifie les événements Pygame
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                cap.release()
+                break
 
     while running:
         oldDamage = boss.health
@@ -311,7 +359,42 @@ def play(player, gameManager):
                 pygame.display.flip()
                 clock.tick(60)
             continue
+            
+        if isDead:
+            player.lives = get("save.json","lives")
+            deadRect = pygame.Surface((1920,1080)) 
+            deadRect.set_alpha(128)               
+            deadRect.fill((0,0,0))           
+            screen.blit(deadRect, (0,0))
+            deadText = get_font(100).render("GAME OVER", True, "#b68f40")
+            deadTextRect = deadText.get_rect(center=(960, 100))
+            screen.blit(deadText,deadTextRect)
+            deadText = font.render(f'You Lose', True, (255, 255, 255))
+            deadTextRect = deadText.get_rect(center=(960, 500))
+            screen.blit(deadText, deadTextRect)
+            deadText = font.render(f'Score:' + str(score.score), True, (255, 255, 255))
+            deadTextRect = deadText.get_rect(center=(960, 550))
+            screen.blit(deadText, deadTextRect)
+            deadText = font.render(f'Money:' + str(player.money), True, (255, 255, 255))
+            deadTextRect = deadText.get_rect(center=(960, 600))
+            screen.blit(deadText, deadTextRect)
+            
+            while True:
+                MENU_BUTTON.changeColor(pygame.mouse.get_pos(), screen)
+                MENU_BUTTON.update(screen)
+                event = pygame.event.poll()
 
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if MENU_BUTTON.checkForInput(pygame.mouse.get_pos(), player):
+                        running = False
+                        isPaused = False
+                        return player.money
+                
+                pygame.display.flip()
+                clock.tick(60)
+                
+        
+        
         # Play music in Loop
         if bossFight:
             backGround = bossBase
@@ -406,6 +489,7 @@ def play(player, gameManager):
                         onScreenEnemiesList.append(enemyList.pop(0))
                         enemyDelayList.pop(0)
             else:
+                
                 enemyList[0].x, enemyList[0].y = enemyDelayList[0][0], enemyDelayList[0][1]
                 onScreenEnemiesList.append(enemyList.pop(0))
                 enemyDelayList.pop(0)
@@ -456,11 +540,10 @@ def play(player, gameManager):
                     bulletRect = pygame.Rect(bullet.x, bullet.y, bullet.size, bullet.size)
                     if enemyRect.colliderect(bulletRect):
                         projectileList.pop(projectileList.index(bullet))
-                        enemy.takeDmg(bullet.damage, onScreenEnemiesList)
+                        enemy.takeDmg(bullet.damage, onScreenEnemiesList, player)
                         score.score_increment(10)
                         
                     if(enemy.health <= 0):
-                        player.money += 10
                         score.score_increment(enemy.score)
                         #the enemy pops itself out of onScreenEnemiesList
                         break
@@ -486,7 +569,7 @@ def play(player, gameManager):
             
             if(particle.doDamage):
                 for enemy in onScreenEnemiesList:
-                    enemy.takeDmg(player.ultimateDmg, onScreenEnemiesList)
+                    enemy.takeDmg(player.ultimateDmg, onScreenEnemiesList, player)
 
         #Add a bullet to the projectileList list on press
         if pressed[pygame.K_w]:
@@ -495,11 +578,11 @@ def play(player, gameManager):
                 shift = True
                 if player.speed != player.slowSpeed:
                     shift = False
-                    if player.missileCooldown <= 0:
-                        player.shootHoming()
-                        player.missileCooldown = player.timeBetweenMissiles
                 player.cooldown = player.timeBetweenShots
                 player.shoot(shift)
+            if player.missileCooldown <= 0 and not shift:
+                player.shootHoming()
+                player.missileCooldown = player.timeBetweenMissiles
         if pressed[pygame.K_x]:
             if player.ultimateCooldown <= 0:
                 #play sfx
@@ -596,13 +679,10 @@ def play(player, gameManager):
         screen.blit(bossHPText, (10, 100))
 
         if player.lives == 0:
-            loseMainText = font.render(f'¶‡?) 8;8) 9‡(;... -8); 95048?(8?¢,', True, (255, 255, 255))
-            screen.blit(loseMainText, (800, 500))
-            loseMinText = font.render(f'stats back to default ones.', True, (255, 255, 255))
-            screen.blit(loseMinText, (800, 550))
             bulletHellSound.stop()
             bossMusic.stop()
-            saveReader(player)
+            post("save.json" ,"money",player.money)
+            isDead = True
 
         if pressed[pygame.K_LSHIFT]:
             pygame.draw.rect(screen, (0,255,0), playerRect)

@@ -2,7 +2,6 @@
 import pygame, sys
 import pygame.time
 
-sys.path.append("/Projet-Mini-Studio")
 #Import Classes
 from Class.player import Player
 from Class.button import Button
@@ -23,7 +22,7 @@ from SaveFiles.templatePaste import templatePaste
 pygame.init()  
 
 # Logo windows
-icon = pygame.image.load("img/emeu.jpg")
+icon = pygame.image.load("img/emeu.jpg") 
 pygame.display.set_icon(icon)
 
 buttonSurface = pygame.image.load("img/UI/button.png")
@@ -71,7 +70,7 @@ darkMissile = darken(missile,60).convert_alpha()
 
 player = Player(10, 5, 50, 1920, 1080, 30, 120, 15, 5, projectileList, darkBullet, darkMissile, darkCarreau)
 
-textEpilepsy = "Warning\n\nThis game has been identified \nby epilepsy action\nto potentially trigger seizure for people with\n photosensitive epilepsy."
+textEpilepsy = "Warning\n\nThis game contains lots of projectiles and colors\nwhich results in flashing lights.\n\nIt might trigger seizure for people with\n photosensitive epilepsy."
 textEpilepsySurface = []
 textEpilepsyRect = []
 for line in textEpilepsy.split('\n'):
@@ -113,7 +112,7 @@ def main_menu(alert=True):
             while True:
                 event = pygame.event.poll()
 
-                if event.type == pygame.KEYDOWN:
+                if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
                     isPaused = False
                     break
 
