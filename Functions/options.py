@@ -3,10 +3,10 @@ import sys
 
 from Class.button import Button
 
-buttonAmeliorationSurface = pygame.image.load("img/UI/buttonAmelioration.png")
+buttonAmeliorationSurface = pygame.image.load("img/ui/buttonAmelioration.png")
 buttonAmeliorationSurface = pygame.transform.scale(buttonAmeliorationSurface, (buttonAmeliorationSurface.get_size()[0] * 2, buttonAmeliorationSurface.get_size()[1] * 2))
 
-buttonSurface = pygame.image.load("img/UI/button.png")
+buttonSurface = pygame.image.load("img/ui/button.png")
 buttonSurface = pygame.transform.scale(buttonSurface, (buttonSurface.get_width()/1.3, buttonSurface.get_height()/1.3))
 
 RESUME_BUTTON = Button(buttonSurface, 960, 700, "Return", False, None, None, buttonSurface)

@@ -7,7 +7,7 @@ from Functions.shopConsumable import shopConsumable
 from Functions.shopShip import shopShip
 
 
-buttonSurface = pygame.image.load("img/UI/button.png")
+buttonSurface = pygame.image.load("img/ui/button.png")
 buttonSurface = pygame.transform.scale(buttonSurface, (buttonSurface.get_width()/1.3, buttonSurface.get_height()/1.3))
 
 RESUME_BUTTON = Button(buttonSurface, 960, 850, "Return", False, None, None, buttonSurface)
@@ -19,7 +19,7 @@ def get_font(size): # Returns Press-Start-2P in the desired size
 MENU_TEXT = get_font(100).render("HOW TO PLAY", True, "#b68f40")
 MENU_TEXT_RECT = MENU_TEXT.get_rect(center=(960, 100))
 
-textHowToPlay = "Movement:\n\n\nDirectional arrows for movement\n\nSHIFT:  Slow Movement\nSPACE:  Dash\n\n\nShoot:\n\n\nW:  Main Shoot\nX:  Ultimate\n\n\nOther:\n\n\nESCAPE:  Menu"
+textHowToPlay = "Movement:\n\n\nDirectional arrows for movement\n\nSHIFT:  Slow Movement\nSPACE:  Dash\n\n\nShoot:\n\n\nW:  Main Shoot\nX:  Ultimate\n\n\nOther:\n\n\nESCAPE:  Menu\nSPACE:  Skip dialogue and intro"
 
 # La police et la taille du texte
 font = pygame.font.Font(None, 36)

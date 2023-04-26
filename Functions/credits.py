@@ -7,7 +7,7 @@ from Functions.shopConsumable import shopConsumable
 from Functions.shopShip import shopShip
 
 
-buttonSurface = pygame.image.load("img/UI/button.png")
+buttonSurface = pygame.image.load("img/ui/button.png")
 buttonSurface = pygame.transform.scale(buttonSurface, (buttonSurface.get_width()/1.3, buttonSurface.get_height()/1.3))
 
 RESUME_BUTTON = Button(buttonSurface, 960, 1000, "Return", False, None, None, buttonSurface)

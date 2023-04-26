@@ -1,4 +1,4 @@
-#Import librairies
+#Imporwwwt librairies
 import pygame, sys
 import pygame.time
 
@@ -25,8 +25,11 @@ pygame.init()
 icon = pygame.image.load("img/emeu.jpg") 
 pygame.display.set_icon(icon)
 
-buttonSurface = pygame.image.load("img/UI/button.png")
+buttonSurface = pygame.image.load("img/ui/button.png")
 buttonSurface = pygame.transform.scale(buttonSurface, (buttonSurface.get_width()/1.3, buttonSurface.get_height()/1.3))
+
+logo = pygame.image.load("img/ui/logo.png")
+logo = pygame.transform.scale(logo, (logo.get_width()/1.3, logo.get_height()/1.3))
 
 #Import missile model
 missile = pygame.image.load("img/bullets/missile.png")
@@ -68,7 +71,12 @@ darkCarreau = darken(carreauBlue,45).convert_alpha()
 darkBullet = darken(classicBullet).convert_alpha()
 darkMissile = darken(missile,60).convert_alpha()
 
-player = Player(10, 5, 50, 1920, 1080, 30, 120, 15, 5, projectileList, darkBullet, darkMissile, darkCarreau)
+imgPlayer = pygame.image.load("img/ships/player.png").convert_alpha()
+imgPlayer = pygame.transform.scale(imgPlayer, (50, 50))
+imgPlayerShield = pygame.image.load("img/ships/playerShield.png").convert_alpha()
+imgPlayerShield = pygame.transform.scale(imgPlayerShield, (50, 50))
+
+player = Player(10, 5, 50, 1920, 1080, 30, 120, 15, 5, projectileList, darkBullet, darkMissile, darkCarreau, imgPlayer, imgPlayerShield)
 
 textEpilepsy = "Warning\n\nThis game contains lots of projectiles and colors\nwhich results in flashing lights.\n\nIt might trigger seizure for people with\n photosensitive epilepsy."
 textEpilepsySurface = []
@@ -88,7 +96,7 @@ def main_menu(alert=True):
         if isPaused:
 
             pausedRect = pygame.Surface((1920,1080)) 
-            pausedRect.set_alpha(128)               
+            pausedRect.set_alpha(128)
             pausedRect.fill((0,0,0))           
             SCREEN.blit(pausedRect, (0,0))
             # La position de la première ligne de texte
@@ -137,7 +145,7 @@ def main_menu(alert=True):
         CREDITS_BUTTON = Button(buttonSurface, 960, 850, "Credit", False, None, credits, buttonSurface)
         QUIT_BUTTON = Button(buttonSurface, 960, 1000, "Quit", False, None, None, buttonSurface)
 
-        SCREEN.blit(MENU_TEXT, MENU_RECT)
+        SCREEN.blit(logo, (960 - (logo.get_width() / 2),0))
 
         for button in [PLAY_BUTTON, OPTIONS_BUTTON, SHOP_BUTTON, QUIT_BUTTON, HOW_TO_PLAY_BUTTON, CREDITS_BUTTON]:
             button.changeColor(MENU_MOUSE_POS, SCREEN)

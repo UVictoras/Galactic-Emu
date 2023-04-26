@@ -39,7 +39,7 @@ class miniBoss():
         for BH in self.BHList:
             BH.move(self.x + self.size/2, self.y + 100)
 
-    def takeDmg(self, dmg, enemyList):
+    def takeDmg(self, dmg, enemyList, player):
         self.health -= dmg
         if(self.health <= 0):
             self.projectileList.clear()
@@ -56,7 +56,7 @@ class miniBoss():
     
     def update(self, player):
         #move
-        miniBossPatern(self, 1)
+        miniBossPatern(self)
         for bulletHandler in self.BHList:
             index = self.BHList.index(bulletHandler)
             if index > 0:
