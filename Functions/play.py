@@ -449,7 +449,7 @@ def play(player, gameManager):
                         running = False
                         isPaused = False
                         post("save.json" ,"money",player.money)
-                        return player.money
+                        return player.money   
                 
                 pygame.display.flip()
                 clock.tick(60)     
