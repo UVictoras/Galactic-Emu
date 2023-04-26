@@ -14,7 +14,6 @@ from Class.miniBoss import miniBoss
 from Functions.saveReader import *
 
 from Functions.enemiesPattern import *
-# from Functions.transition import *
 
 def drawTransition(surf, y, color):
     for x in range(16):
@@ -218,12 +217,6 @@ def play(player, gameManager):
     imgUltimate = pygame.image.load("img/ui/ultimate.png").convert_alpha()
     imgUltimate = pygame.transform.scale(imgUltimate, (40, 40))
 
-    # darkCarreau = darken(carreauBlue,45).convert_alpha()
-    # darkBullet = darken(bulletBlue).convert_alpha()
-    # darkMissile = darken(missileBlue,60).convert_alpha()
-
-    # player = Player(10, 5, 50, 1920, 1080, 30, 60, 15, 5, projectileList, bulletBlue, missileBlue, carreauBlue)
-
     player.projectileList = projectileList
     player.redefined()
 
@@ -242,16 +235,16 @@ def play(player, gameManager):
     imgMiniBoss = pygame.transform.scale(imgMiniBoss, (100,100))
 
     #Create Enemy
-    "[aimAtEnemy, HP, speed, x, y, size, displayWidth, displayHeight, score, image, bulletImg, bulletSpeed, arrayNumber, angleBetweenArrays, projectileList, timeBetweenShots, facing, ||optionals from now|| money, bulletRotation, bulletSpeed2, arrayNumber2, angleBetweenArrays2, timeBetweenShots2, bulletImg2, aimAtPlayer2, bulletRotation2, pattern"
+    "[aimAtEnemy, HP, speed, x, y, size, displayWidth, displayHeight, score, image, bulletImg, bulletSpeed, arrayNumber, angleBetweenArrays, projectileList, timeBetweenShots, facing, ||optionals from now|| money, bulletRotation, bulletSpeed2, arrayNumber2, angleBetweenArrays2, timeBetweenShots2, bulletImg2, aimAtPlayer2, bulletRotation2, pattern]"
     miniBozo = [True, 10, 0.5, 1200, 0, 50, displayWidth, displayHeight, 100, imgMiniBozo, bulletRed, 10, 1, 0, projectileList, 3, "left", 10]
     bozo = [True, 100, 2, 1200, 0, 50, displayWidth, displayHeight, 100, imgBozo, bulletRed, 10, 1, 0, projectileList, 1, "left", 20]
     railgun = [True, 300, 0.5, 300, 0, 50, displayWidth, displayHeight, 100, imgRailgun, bigBallYellow, 3, 5, 10, projectileList, 3, "left", 50]
     supressor = [True, 150, 1, 500, 0, 50, displayWidth, displayHeight, 100, imgSupressor, bulletYellow, 4, 4, 30, projectileList, 1, "left",30, 0, 10, 1, 0, 2, bigBallRed]
     spyral = [False, 300, 0.5, 500, 0, 50, displayWidth, displayHeight, 100, imgSpyral, carreauGreen, 1, 4, 30, projectileList, 1.5, "left",30, 3]
     miniboss = miniBoss(750, 1, 0, 0, 100, 1920, 1080, 1000, imgMiniBoss, projectileList, "right")
-    enemyDelayList = [[10, 300, 1], [1870,300,0],[10,300,60],[1870,300,0],[10,300,60],[1870,300,0], [displayWidth/4, 1, 160],[3*displayWidth/4, 1, 0], [displayWidth/2, 1, 160],[displayWidth/4, 1, 160],[3*displayWidth/4, 1, 0],[3*displayWidth/4, 1, 60],[displayWidth/4, 1, 0],[displayWidth/2, 1, 160],[3*displayWidth/4, 1, 60],[displayWidth/4, 1, 0], [3*displayWidth/4, 1, 60],[displayWidth/4, 1, 0], [3*displayWidth/4, 1, 60],[displayWidth/4, 1, 0], [3*displayWidth/4, 1, 60],[displayWidth/4, 1, 0], [3*displayWidth/4, 1, 60],[displayWidth/4, 1, 0], [10, 300, 1], [1870,300,0], [10, 300, 1],[displayWidth/4, 1, 0], [3*displayWidth/4, 1, 60], [0,0,0],[0,0,0], [0,0,0]]
+    enemyDelayList = [[10, 300, 2], [1870,300,0],[10,300,120],[1870,300,0],[10,300,120],[1870,300,0], [displayWidth/4, 1, 320],[3*displayWidth/4, 1, 0], [displayWidth/2, 1, 320],[displayWidth/4, 1, 320],[3*displayWidth/4, 1, 0],[3*displayWidth/4, 1, 120],[displayWidth/4, 1, 0],[displayWidth/2, 1, 320],[3*displayWidth/4, 1, 120],[displayWidth/4, 1, 0], [3*displayWidth/4, 1, 120],[displayWidth/4, 1, 0], [3*displayWidth/4, 1, 120],[displayWidth/4, 1, 0], [3*displayWidth/4, 1, 120],[displayWidth/4, 1, 0], [3*displayWidth/4, 1, 120],[displayWidth/4, 1, 0], [10, 300, 2], [1870,300,0], [10, 300, 2],[displayWidth/4, 1, 0], [3*displayWidth/4, 1, 120], [0,0,120],[0,0,60], [0,0,0]]
     enemyList  = [createEnemy(miniBozo), createEnemy(miniBozo), createEnemy(miniBozo),createEnemy(miniBozo), createEnemy(miniBozo), createEnemy(miniBozo), createEnemy(bozo), createEnemy(bozo), createEnemy(railgun), createEnemy(bozo), createEnemy(supressor), createEnemy(bozo), createEnemy(railgun), createEnemy(bozo), createEnemy(bozo),createEnemy(spyral),createEnemy(spyral), createEnemy(railgun), createEnemy(supressor), createEnemy(spyral), createEnemy(bozo), createEnemy(bozo), createEnemy(supressor), createEnemy(railgun), createEnemy(miniBozo), createEnemy(miniBozo), createEnemy(miniBozo), createEnemy(bozo), createEnemy(bozo), createEnemy(bozo), miniboss]
-    # enemyList = []
+
     onScreenEnemiesList = []
     #create boss
     bossSize = 300
@@ -261,7 +254,6 @@ def play(player, gameManager):
     bossImgAvatar = pygame.transform.scale(bossImgAvatar, (150, 150))
     boss = Boss(10000, 0.5, 0, 0, bossSize, 1920, 1080, 1000, bossImg, projectileList, "Left")
     enemyList.append(boss)
-    #onScreenEnemiesList.append(boss)
     bossFight = False
     patternBoss = 1
 
@@ -336,7 +328,6 @@ def play(player, gameManager):
                 break
 
     while running:
-        oldDamage = boss.health
         # run the game at a constant 60fps
         clock.tick(60)
         #Close window on Escape press
@@ -429,6 +420,7 @@ def play(player, gameManager):
                 clock.tick(60)
         
         if len(enemyList) == 0 and len(onScreenEnemiesList) == 0:
+            player.money += 500
             player.lives = get("save.json","lives")
             deadRect = pygame.Surface((1920,1080)) 
             deadRect.set_alpha(128)               
@@ -460,9 +452,7 @@ def play(player, gameManager):
                         return player.money
                 
                 pygame.display.flip()
-                clock.tick(60)
-                
-        
+                clock.tick(60)     
         
         # Play music in Loop
         if bossFight:
@@ -754,13 +744,6 @@ def play(player, gameManager):
             projectileList.clear()
             invincible = True
             invincibleCountdown = 60
-
-
-        # screen.blit(textDialogueSurface[textDialoguePhase], textDialogueRect)
-        # if bossFight:
-        #     screen.blit(textDialogueSurfaceBoss[textDialoguePhaseBoss], textDialogueRectBoss)
-        
-        # Display the hero avatar
         
         screen.blit(imgPortraitPlayer,(0 ,displayHeight - imgPortraitPlayer.get_height()))
 
@@ -796,14 +779,6 @@ def play(player, gameManager):
         if bossFight:
             screen.blit(imgPortraitBoss,(displayWidth - bossImgAvatar.get_width() ,0))
             screen.blit(bossImgAvatar,(displayWidth - bossImgAvatar.get_width() , 0))
-        
-        currentDamage = boss.health
-        deltaD = oldDamage - currentDamage
-        deltaText = font.render(f'DPS : {deltaD * 60}', True, (255, 0, 0))
-        screen.blit(deltaText, (10, 150))
-
-        bossHPText = font.render(f'Boss HP: {boss.health}', True, (255, 255, 255))
-        screen.blit(bossHPText, (10, 100))
 
         if player.lives == 0:
             bulletHellSound.stop()

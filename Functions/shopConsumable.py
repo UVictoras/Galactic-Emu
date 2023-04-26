@@ -39,10 +39,6 @@ if get("save.json", "secondaryWeapon1") == "spiral":
     SPIRAL_BUTTON = Button(spiral, 800, 700, "", True, -1, None, buttonSurface, "Shoots bullets all arround your ship")
 else:
     SPIRAL_BUTTON = Button(spiral, 800, 700, "", True, 50, None, buttonSurface, "Shoots bullets all arround your ship")
-    
-# SHOTGUN_BUTTON = Button(buttonSurface, 800, 700, "Shotgun", True, 150, None, buttonSurface, "Slow firerate but wide angle")
-# PHOENIX_BUTTON = Button(buttonSurface, 1150, 550, "Phoenix", True, 250, None, buttonSurface, "A strong and fast missile")
-# SPIRAL_BUTTON = Button(buttonSurface, 1150, 700, "Spiral", True, 50, None, buttonSurface, "Shoots bullets all arround your ship")
 
 def get_font(size): # Returns Press-Start-2P in the desired size
     return pygame.font.Font("asset/font.ttf", size)

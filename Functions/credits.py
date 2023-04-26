@@ -52,7 +52,6 @@ def credits(SCREEN, BG, player, main_menu):
             y += text.get_height()
 
         SCREEN.blit(MENU_TEXT, MENU_TEXT_RECT)
-        # SCREEN.blit(MENU_UPGRADE, MENU_UPGRADE_RECT)
 
         for button in [RESUME_BUTTON]:
             button.changeColor(MENU_MOUSE_POS, SCREEN)

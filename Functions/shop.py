@@ -45,7 +45,6 @@ def shop(SCREEN, BG, player, main_menu, gameManager):
         SCREEN.blit(MENU_TEXT, MENU_TEXT_RECT)
         SCREEN.blit(imgCoin,(0 ,50))
         SCREEN.blit(MENU_MONEY, (100,60))
-        # SCREEN.blit(MENU_UPGRADE, MENU_UPGRADE_RECT)
         for button in [RESUME_BUTTON, SHIP_BUTTON, BULLET_BUTTON, CONSUMABLE_BUTTON, SKIN_BUTTON]:
             button.changeColor(MENU_MOUSE_POS, SCREEN)
             button.update(SCREEN)
